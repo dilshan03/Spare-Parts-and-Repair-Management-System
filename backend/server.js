@@ -9,7 +9,7 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import leaveRouter from "./route/LeaveRoute.js";
 import salaryRouter from "./routeSalaryRoute.js";
-import RepairRequestFromRoute from "./routes//Repair/RepairRequestFromRoute.js";//RY
+import RepairRequestFromRoute from "./routes/Repair/RepairRequestFromRoute.js";//RY
 import RepairRoute from "./routes/Repair/RepairRoutes.js"; // Import Repair Rout
 import jobCardRoutes from "./routes/Repair/JobCardRoutes.js";
 import cors from "cors";
