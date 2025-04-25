@@ -4,14 +4,15 @@ import Hero from './components/Hero';
 import Categories from './components/Categories';
 import Footer from './components/Footer';
 import AdminDashboard from './components/AdminDashboard';
+import Login from './pages/HR/Login.jsx';
+import { Toaster } from 'react-hot-toast';
 
-import AdminPanel from './components/AdminPanel';
-import Login from './pages/Login';
-import EmployeeProfile from './pages/EmployeeProfile'
-import LeaveRequest from './pages/LeaveRequest'
-import UpdatePassword from './pages/UpdatePassword'
+// import AdminPanel from './components/AdminPanel';
+// import EmployeeProfile from './pages/EmployeeProfile'
+// import LeaveRequest from './pages/LeaveRequest'
+// import UpdatePassword from './pages/UpdatePassword'
 
-import FinanceDashboard from './components/FinanceDashboard'
+// import FinanceDashboard from './components/FinanceDashboard'
 
 import StaffPage from './components/StaffPage';
 import AboutUsPage from './components/AboutUsPage';
@@ -22,6 +23,7 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-d
 function App() {
   return (
     <Router>
+      <Toaster position="top-center" />
       <Navbar />
       <Routes>
         
@@ -35,12 +37,12 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/admin" element={<AdminDashboard />} />
 
-        
-        <Route path="/admin/employees/*" element={<AdminPanel  />} />
+
+        {/* <Route path="/admin/employees/*" element={<AdminPanel  />} />
         <Route path="/employeeProfile" element={<EmployeeProfile />} />
         <Route path="/employeeProfile/leave" element={<LeaveRequest/>} />
         <Route path="/api/reset-password" element={< UpdatePassword/>} />
-        <Route path="/finance-dashboard" element={<FinanceDashboard/>} />
+        <Route path="/finance-dashboard" element={<FinanceDashboard/>} /> */}
 
       </Routes>
       <Footer />
