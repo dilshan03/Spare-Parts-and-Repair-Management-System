@@ -1,11 +1,11 @@
 import React from "react";
 import { Link,useLocation, Routes, Route } from "react-router-dom";
-import EmployeeDetails from "../pages/EmployeeDetails";
-import SalaryDetails from "../pages/SalaryDetails";
-import LeaveDetails from "../pages/LeaveDetails";
-import AdminEditEmployee from "../pages/AdminEditEmployee";
-import AdminAddEmployee from "../pages/AdminAddEmployee";
-import AdminGenarateSalary from "../pages/AdminGenarateSalary";
+import EmployeeDetails from "../pages/HR/EmployeeDetails";
+import SalaryDetails from "../pages/HR/SalaryDetails";
+import LeaveDetails from "../pages/HR/LeaveDetails";
+import AdminEditEmployee from "../pages/HR/AdminEditEmployee";
+import AdminAddEmployee from "../pages/HR/AdminAddEmployee";
+import AdminGenarateSalary from "../pages/HR/AdminGenarateSalary";
 
 export default function AdminPanel() {
 
