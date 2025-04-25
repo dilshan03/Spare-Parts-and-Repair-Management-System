@@ -28,12 +28,14 @@ function App() {
         {/*<Route path="/repair" element={<RepairPage />} />*/}
         {/*<Route path="/service" element={<ServicePage />} />*/}
 
-        <Route path="/" element={<Hero />} />
+        <Route path="/" element={<Hero />} /> 
         <Route path="/about-us" element={<AboutUsPage />} />
         <Route path="/categories" element={<Categories />} />
         <Route path="/staff" element={<StaffPage />} />        
         <Route path="/login" element={<Login />} />
         <Route path="/admin" element={<AdminDashboard />} />
+
+        
         <Route path="/admin/employees/*" element={<AdminPanel  />} />
         <Route path="/employeeProfile" element={<EmployeeProfile />} />
         <Route path="/employeeProfile/leave" element={<LeaveRequest/>} />

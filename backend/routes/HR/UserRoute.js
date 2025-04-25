@@ -4,13 +4,16 @@ import { updateEmployee } from "../../controllers/HR/UserControllers.js";
 
 const userRoute = express.Router();
 
-userRoute.post("/",createEmployee);
-userRoute.put("/:id",updateEmployee);
-userRoute.post("/login",loginEmployee);
-userRoute.delete("/:id",deleteEmployee);
-userRoute.get("/",getEmployee);
+// Specific routes first
+userRoute.post("/login", loginEmployee);
 userRoute.post("/request-otp", requestOtp);
 userRoute.post("/verify-otp", verifyOtp);
 userRoute.post("/reset-password", resetPassword);
+
+// Root and parameter routes last
+userRoute.get("/", getEmployee);
+userRoute.post("/", createEmployee);
+userRoute.put("/:id", updateEmployee);
+userRoute.delete("/:id", deleteEmployee);
 
 export default userRoute;

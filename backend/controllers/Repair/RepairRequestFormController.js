@@ -1,4 +1,4 @@
-import RepairRequestFormModel from "../models/RepairRequestForm.js"; // Adjust the path as needed
+import RepairRequestFormModel from "../../models/Repair/RepairRequestForm.js"; // Adjust the path as needed
 
 // Create a repair request
 export const createRepairRequest = async (req, res) => {

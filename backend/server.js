@@ -3,12 +3,12 @@
 
 import express from "express";
 import mongoose from "mongoose";
-import userRoute from "./routes/UserRoute.js";
+import userRoute from "./routes/HR/UserRoute.js";
 import bodyParser from "body-parser";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import leaveRouter from "./routes/LeaveRoute.js";
-import salaryRouter from "./routeSalaryRoute.js";
+import leaveRouter from "./routes/HR/LeaveRoute.js";
+import salaryRouter from "./routes/HR/SalaryRoute.js";
 import RepairRequestFromRoute from "./routes/Repair/RepairRequestFromRoute.js";//RY
 import RepairRoute from "./routes/Repair/RepairRoutes.js"; // Import Repair Rout
 import jobCardRoutes from "./routes/Repair/JobCardRoutes.js";
@@ -19,23 +19,26 @@ dotenv.config();
 const app = express();
 
 // Configure CORS
-app.use(cors({
+const corsOptions = {
   origin: "http://localhost:5173",
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
-  exposedHeaders: ["Content-Range", "X-Content-Range"]
-}));
+  exposedHeaders: ["Content-Range", "X-Content-Range"],
+  optionsSuccessStatus: 200
+};
+
+app.use(cors(corsOptions));
 
 // Enable pre-flight requests for all routes
-app.options("*", cors()); 
+app.options("*", cors(corsOptions));
 
 app.use(bodyParser.json({ limit: "100mb" }));  // Increase JSON limit to 50MB //RY
 app.use(bodyParser.urlencoded({ limit: "100mb", extended: true }));  // Increase form-data limit //RY
 
 
 app.use((req,res,next)=>{
-
+    // Define public routes and their patterns
     const publicRoutes = [
         "/api/employees/login",
         "/api/employees/request-otp",
@@ -43,7 +46,8 @@ app.use((req,res,next)=>{
         "/api/employees/reset-password"
     ];
     
-    if (publicRoutes.includes(req.originalUrl)) {
+    // Check if the request URL matches any public route
+    if (publicRoutes.some(route => req.originalUrl === route)) {
         console.log(`Bypassing auth for: ${req.originalUrl}`);
         return next();
     }
@@ -51,8 +55,8 @@ app.use((req,res,next)=>{
     let token = req.header("Authorization")
 
     if(token){
-        token = token.replace("Bearer ", "")
-        jwt.verify(token,process.env.jwt,(error, decoded)=>{
+        token = token.replace("Bearer ", "");
+        jwt.verify(token, process.env.JWT_SECRET, (error, decoded) => {
             if(error){
                 res.status(401).json({
                     error : "Invalid token"
@@ -73,10 +77,14 @@ app.use((req,res,next)=>{
     }
 })
 
-let mongoUrl = process.env.MONGO_URL;
+const mongoUri = process.env.MONGO_URI;
 
+if (!mongoUri) {
+    console.error('MongoDB URI is not defined in environment variables');
+    process.exit(1);
+}
 
-mongoose.connect(mongoUrl);
+mongoose.connect(mongoUri);
 
 const conn = mongoose.connection;
 
@@ -84,12 +92,12 @@ conn.once("open",()=>{
     console.log("Connection established")
 })
 
-app.use("/api/employees",userRoute);//ID
-app.use("/api/leave",leaveRouter);//ID
-app.use("/api/salary",salaryRouter); //ID
-app.use("/repairRequest",RepairRequestFromRoute);//RY
-app.use("/repairs", RepairRoute); //RY
-app.use("/jobCards", jobCardRoutes); //RY 
+app.use("/api/employees", userRoute); //ID
+app.use("/api/leave", leaveRouter); //ID
+app.use("/api/salary", salaryRouter); //ID
+app.use("/api/repair-request", RepairRequestFromRoute); //RY
+app.use("/api/repairs", RepairRoute); //RY
+app.use("/api/job-cards", jobCardRoutes); //RY
 
 
 app.listen(5000,()=>{

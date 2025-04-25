@@ -1,7 +1,7 @@
 
 
-import Repair from "../models/Repair.js";
-import RepairRequestFormModel from "../models/RepairRequestForm.js";
+import Repair from "../../models/Repair/Repair.js";
+import RepairRequestFormModel from "../../models/Repair/RepairRequestForm.js"; // Adjust the path as needed
 import nodemailer from "nodemailer"; 
 
 

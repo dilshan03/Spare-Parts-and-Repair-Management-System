@@ -1,0 +1,204 @@
+/* .repair-container {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+.search-bar {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 1.5rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.search-bar:focus {
+  outline: none;
+  border-color: #4a90e2;
+  box-shadow: 0 0 5px rgba(74, 144, 226, 0.3);
+}
+
+.repair-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.repair-table thead {
+  background-color: #2c3e50;
+  color: white;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.repair-table th {
+  padding: 1.2rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  letter-spacing: 0.5px;
+  border: none;
+  white-space: nowrap;
+}
+
+.repair-table td {
+  padding: 1rem;
+  border-bottom: 1px solid #e0e0e0;
+  color: #444;
+}
+
+.repair-table tr:last-child td {
+  border-bottom: none;
+}
+
+.repair-table tbody tr:hover {
+  background-color: #f5f8ff;
+}
+
+.repair-table thead tr:hover {
+  background-color: #2c3e50;
+}
+
+.status-badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-weight: 500;
+  font-size: 0.875rem;
+}
+
+.status-badge.completed {
+  background-color: #28a745;
+  color: white;
+}
+
+.status-badge.in-progress {
+  background-color: #007bff;
+  color: white;
+}
+
+.status-badge.pending {
+  background-color: #ffc107;
+  color: #000;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.btn-action {
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+}
+
+.btn-view {
+  background-color: #4a90e2;
+  color: white;
+}
+
+.btn-edit {
+  background-color: #f0ad4e;
+  color: white;
+}
+
+.btn-email {
+  background-color: #5cb85c;
+  color: white;
+}
+
+.btn-jobs {
+  background-color: #17a2b8;
+  color: white;
+}
+
+.btn-action:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 2rem;
+}
+
+.pagination-button {
+  padding: 8px 16px;
+  border: 1px solid #dee2e6;
+  background-color: white;
+  color: #4a90e2;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pagination-button:hover {
+  background-color: #4a90e2;
+  color: white;
+  border-color: #4a90e2;
+}
+
+.pagination-button.active {
+  background-color: #4a90e2;
+  color: white;
+  border-color: #4a90e2;
+}
+
+.modal-content {
+  border-radius: 10px;
+}
+
+.modal-header {
+  background-color: #f8f9fa;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.modal-footer {
+  background-color: #f8f9fa;
+  border-top: 2px solid #e0e0e0;
+}
+
+@media (max-width: 768px) {
+  .repair-container {
+    padding: 1rem;
+  }
+
+  .repair-table {
+    display: block;
+    overflow-x: auto;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+  }
+
+  .btn-action {
+    width: 100%;
+  }
+}
+
+  }
+
+  .btn-action {
+    width: 100%;
+  }
+}
+ */

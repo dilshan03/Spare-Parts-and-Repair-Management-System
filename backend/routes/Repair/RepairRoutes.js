@@ -7,18 +7,21 @@ import {
   deleteRepair,
   createRepairsForAllRequestForms,
   sendRepairCompletedEmail, 
-} from "../controllers/repairController.js";
+} from "../../controllers/Repair/RepairController.js";
 
 const router = express.Router();
-
-// Create a new repair
-router.post("/", createRepair);
 
 // Create repairs for all RepairRequestForms
 router.post("/create-from-all-request-forms", createRepairsForAllRequestForms);
 
 // Get all repairs
-router.get("/get-all-repairs/", getAllRepairs);
+router.get("/get-all-repairs", getAllRepairs);
+
+// Send email after repair completion
+router.post("/send-email/:id", sendRepairCompletedEmail);
+
+// Create a new repair
+router.post("/", createRepair);
 
 // Get a repair by ID
 router.get("/:id", getRepairById);
@@ -28,9 +31,6 @@ router.put("/:id", updateRepair);
 
 // Delete a repair by ID
 router.delete("/:id", deleteRepair);
-
-// Send email after repair completion
-router.post("/send-email/:id", sendRepairCompletedEmail);
 
 
 export default router;

@@ -1,6 +1,6 @@
-import JobCard from "../../models/JobCard.js";
-import Repair from "../../models/Repair.js";
-import User from "../../models/UserModel.js";
+import JobCard from "../../models/Repair/JobCard.js";
+import Repair from "../../models/Repair/Repair.js";
+import User from "../../models/HR/UserModel.js";
 
 //create job card
 export const createJobCard = async (req, res) => {
