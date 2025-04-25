@@ -1,0 +1,60 @@
+.footer {
+    background-color: #15153e;
+    color: white;
+    padding: 40px 20px; /* Increased padding for more space around */
+    text-align: left;
+  }
+  
+  .footer-container {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .footer-section {
+    flex: 1;
+    min-width: 250px; /* Increased the min-width for better spacing */
+    margin-bottom: 30px; /* Increased margin for more space between sections */
+  }
+  
+  .footer-section h3 {
+    font-size: 18px;
+    margin-bottom: 15px; /* Increased space below the section title */
+    margin-right: 30px;
+  }
+  
+  .footer-section ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .footer-section ul li {
+    margin: 8px 0; /* Increased spacing between list items */
+    font-size: 14px;
+  }
+  
+  .footer-logo h2 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 30px; /* Add some space below the logo */
+    
+  }
+  
+  .footer-bottom {
+    background: #d3d3d3;
+    padding: 15px 20px; /* Increased padding for better spacing */
+    text-align: center;
+    color: black;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .social-icons span {
+    margin: 0 10px; /* Increased margin between social icons */
+    cursor: pointer;
+    font-size: 18px;
+  }
+  
