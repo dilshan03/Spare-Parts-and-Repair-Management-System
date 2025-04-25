@@ -3,11 +3,11 @@
 
 import express from "express";
 import mongoose from "mongoose";
-import userRoute from "./route/UserRoute.js";
+import userRoute from "./routes/UserRoute.js";
 import bodyParser from "body-parser";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import leaveRouter from "./route/LeaveRoute.js";
+import leaveRouter from "./routes/LeaveRoute.js";
 import salaryRouter from "./routeSalaryRoute.js";
 import RepairRequestFromRoute from "./routes/Repair/RepairRequestFromRoute.js";//RY
 import RepairRoute from "./routes/Repair/RepairRoutes.js"; // Import Repair Rout

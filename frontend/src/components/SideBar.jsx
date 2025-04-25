@@ -1,0 +1,38 @@
+import React from "react";
+import { Link } from "react-router-dom";
+
+const Sidebar = () => {
+  return (
+    <div className="bg-gray-900 text-white w-64 min-h-screen p-6 shadow-lg">
+      <h3 className="mb-6 text-xl font-bold">Admin Panel</h3>
+      <nav className="space-y-2">
+
+        <Link to="/finance-dashboard" className="block px-4 py-2 rounded-lg hover:bg-gray-700 transition">
+          Finance Dashboard
+        </Link>
+
+        <Link to="/admin/employees/details" className="block px-4 py-2 rounded-lg hover:bg-gray-700 transition">
+          Employee Dashboard
+        </Link>
+
+        <Link to="/quotation-dashboard" className="block px-4 py-2 rounded-lg hover:bg-gray-700 transition">
+          Quotation History
+        </Link>
+
+        <Link to="/repair-dashboard" className="block px-4 py-2 rounded-lg hover:bg-gray-700 transition">
+          Repair Job Requests
+        </Link>
+
+        <Link to="/appointment-dashboard" className="block px-4 py-2 rounded-lg hover:bg-gray-700 transition">
+          Service Appointments
+        </Link>
+        
+        <Link to="/inventory-dashboard" className="block px-4 py-2 rounded-lg hover:bg-gray-700 transition">
+          Inventory Management
+        </Link>
+      </nav>
+    </div>
+  );
+};
+
+export default Sidebar;
