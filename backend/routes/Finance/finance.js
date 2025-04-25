@@ -1,6 +1,6 @@
 import express from "express";
-import Transaction from "../models/Transaction.js";
-import financeController from "../controllers/financeController.js";
+import Transaction from "../../models/Transaction.js";
+import financeController from "../../controllers/financeController.js";
 
 
 const router = express.Router();

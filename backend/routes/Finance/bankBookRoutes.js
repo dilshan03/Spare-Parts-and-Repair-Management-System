@@ -6,7 +6,7 @@ import {
     updateTransaction,
     deleteTransaction,
     getAllTransactions
-  } from "../controllers/bankBookController.js";
+  } from "../../controllers/bankBookController.js";
 
 const router = express.Router();
 

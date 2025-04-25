@@ -1,4 +1,4 @@
-import Quotation from '../models/Quotation.js';  // Make sure the .js extension is added
+import Quotation from '../../models/Quotation.js';  // Make sure the .js extension is added
 import { generatePDF } from '../utils/pdfGenerator.js';  // Use import statement
 import nodemailer from 'nodemailer';
 

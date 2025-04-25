@@ -1,7 +1,7 @@
 const express = require('express');
 const multer = require('multer');
 const nodemailer = require('nodemailer');
-const Payment = require('../models/Payment'); // Assuming a Payment model is created
+const Payment = require('../../models/Payment'); // Assuming a Payment model is created
 const router = express.Router();
 
 // Configure Multer for file uploads

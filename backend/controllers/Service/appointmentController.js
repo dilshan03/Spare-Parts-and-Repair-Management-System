@@ -1,4 +1,4 @@
-import Appointment from '../models/Appointment.js';
+import Appointment from '../../models/Appointment.js';
 import nodemailer from 'nodemailer';
 
 // Function to send appointment confirmation email

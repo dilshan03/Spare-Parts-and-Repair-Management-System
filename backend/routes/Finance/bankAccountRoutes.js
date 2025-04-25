@@ -5,7 +5,7 @@ import {
     deleteBankAccount,
     getAllBankAccounts
 
-} from '../controllers/bankAccountController.js';
+} from '../../controllers/bankAccountController.js';
 
 
   

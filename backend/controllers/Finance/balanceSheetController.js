@@ -1,5 +1,5 @@
 import PDFDocument from 'pdfkit';
-import BalanceSheet from '../models/BalanceSheet.js';
+import BalanceSheet from '../../models/BalanceSheet.js';
 
 // 📌 Add Balance Sheet Entry
 export const addBalanceSheet = async (req, res) => {

@@ -1,7 +1,7 @@
 // routes/appointmentRoutes.js
 import express from "express";
-import Appointment from "../models/Appointment.js"; // Ensure the .js extension is included
-import { createAppointment } from "../controllers/appointmentController.js"; // Also include .js
+import Appointment from "../../models/Appointment.js"; // Ensure the .js extension is included
+import { createAppointment } from "../../controllers/appointmentController.js"; // Also include .js
 
 const router = express.Router();
 

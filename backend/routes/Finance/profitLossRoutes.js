@@ -1,5 +1,5 @@
 import express from 'express';
-import ProfitLoss from '../models/ProfitLoss.js';
+import ProfitLoss from '../../models/ProfitLoss.js';
 
 const router = express.Router();
 
