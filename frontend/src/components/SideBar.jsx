@@ -19,7 +19,7 @@ const Sidebar = () => {
           Quotation History
         </Link>
 
-        <Link to="/repair-dashboard" className="block px-4 py-2 rounded-lg hover:bg-gray-700 transition">
+        <Link to="/RepairadminDash/" className="block px-4 py-2 rounded-lg hover:bg-gray-700 transition">
           Repair Job Requests
         </Link>
 

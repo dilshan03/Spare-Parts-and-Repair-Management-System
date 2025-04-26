@@ -32,7 +32,7 @@ const UpdateRepairRequest = () => {
     const fetchRepairRequest = async () => {
       try {
         const token = localStorage.getItem("token");//RY
-        const response = await axios.get(`http://localhost:5000/repairRequest/${id}`, {//RT
+        const response = await axios.get(`http://localhost:5000/api/repairRequest/${id}`, {
           headers: { Authorization: `Bearer ${token}` }
         })//RY
         console.log("API Response:", response.data); // Debugging: Check the response
@@ -106,7 +106,7 @@ const UpdateRepairRequest = () => {
       }
 
       const response = await axios.put(
-        `http://localhost:5000/repairRequest/${id}`,
+        `http://localhost:5000/api/repairRequest/${id}`,
         repairRequest,
         {
           headers: {

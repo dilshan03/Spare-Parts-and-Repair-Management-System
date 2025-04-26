@@ -36,6 +36,14 @@ app.options("*", cors(corsOptions));
 app.use(bodyParser.json({ limit: "100mb" }));  // Increase JSON limit to 50MB //RY
 app.use(bodyParser.urlencoded({ limit: "100mb", extended: true }));  // Increase form-data limit //RY
 
+// Mount routes with /api prefix
+app.use("/api/employees", userRoute);
+app.use("/api/leaves", leaveRouter);
+app.use("/api/salary", salaryRouter);
+app.use("/api/repairs", RepairRoute);
+app.use("/api/repairRequest", RepairRequestFromRoute);
+app.use("/api/jobCards", jobCardRoutes);
+
 
 app.use((req,res,next)=>{
     // Define public routes and their patterns
@@ -95,9 +103,9 @@ conn.once("open",()=>{
 app.use("/api/employees", userRoute); //ID
 app.use("/api/leave", leaveRouter); //ID
 app.use("/api/salary", salaryRouter); //ID
-app.use("/api/repair-request", RepairRequestFromRoute); //RY
+app.use("/api/repairRequest", RepairRequestFromRoute); //RY
 app.use("/api/repairs", RepairRoute); //RY
-app.use("/api/job-cards", jobCardRoutes); //RY
+app.use("/api/jobCards", jobCardRoutes); //RY
 
 
 app.listen(5000,()=>{

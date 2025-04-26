@@ -165,13 +165,13 @@ const JobCardList = () => {
       try {
         const token = localStorage.getItem("token"); // ✅ Get token from local storage
         const [jobCardsResponse, repairRequestsResponse, repairResponse] = await Promise.all([
-          axios.get("http://localhost:5000/jobCards/", {
+          axios.get("http://localhost:5000/api/jobCards/", {
             headers: { Authorization: `Bearer ${token}` } // ✅ Attach token to headers
           }),
-          axios.get("http://localhost:5000/repairRequest/", {
+          axios.get("http://localhost:5000/api/repairRequest/", {
             headers: { Authorization: `Bearer ${token}` } // ✅ Attach token to headers
           }),
-          axios.get("http://localhost:5000/repairs/get-all-repairs/", {
+          axios.get("http://localhost:5000/api/repairs/get-all-repairs/", {
             headers: { Authorization: `Bearer ${token}` } // ✅ Attach token to headers
           })
         ]);

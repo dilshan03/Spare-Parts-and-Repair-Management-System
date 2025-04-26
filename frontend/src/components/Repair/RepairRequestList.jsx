@@ -22,7 +22,7 @@ const RepairRequestList = () => {
     const fetchRepairRequests = async () => {
       try {
         const token = localStorage.getItem("token");//RY
-        const response = await axios.get("http://localhost:5000/repairRequest/", {//RT
+        const response = await axios.get("http://localhost:5000/api/repairRequest/", {//RT
           headers: { Authorization: `Bearer ${token}` }
         })//RY
         setRepairRequests(response.data);
@@ -93,7 +93,9 @@ const RepairRequestList = () => {
       }).then((result) => {
         if (result.isConfirmed) {
           axios
-            .delete(`http://localhost:5000/repairRequest/${id}`)
+            .delete(`http://localhost:5000/api/repairRequest/${id}`, {
+              headers: { Authorization: `Bearer ${token}` }
+            })
             .then((res) => {
               setRepairRequests(repairRequests.filter((request) => request._id !== id));
               toast.success("Repair request deleted successfully!", {

@@ -126,7 +126,7 @@ const JobCardDetail = () => {
       try {
         const token = localStorage.getItem("token");
         setLoading(true);
-        const response = await axios.get(`http://localhost:5000/jobCards/${id}`, {
+        const response = await axios.get(`http://localhost:5000/api/jobCards/${id}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setJobCard(response.data);
@@ -159,7 +159,7 @@ const JobCardDetail = () => {
       updatedJobs[jobIndex] = updatedJob;
   
       const response = await axios.put(
-        `http://localhost:5000/jobCards/${id}`,
+        `http://localhost:5000/api/jobCards/${id}`,
         { jobs: updatedJobs },
         {
           headers: { Authorization: `Bearer ${token}` }
@@ -183,7 +183,7 @@ const JobCardDetail = () => {
       const updatedJobs = [...jobCard.jobs, newJob];
   
       const response = await axios.put(
-        `http://localhost:5000/jobCards/${id}`,
+        `http://localhost:5000/api/jobCards/${id}`,
         { jobs: updatedJobs },
         {
           headers: { Authorization: `Bearer ${token}` }
@@ -214,7 +214,7 @@ const JobCardDetail = () => {
       const updatedJobs = jobCard.jobs.filter((_, index) => index !== jobIndex);
   
       const response = await axios.put(
-        `http://localhost:5000/jobCards/${id}`,
+        `http://localhost:5000/api/jobCards/${id}`,
         { jobs: updatedJobs },
         {
           headers: { Authorization: `Bearer ${token}` }
