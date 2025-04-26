@@ -1,6 +1,6 @@
 import Salary from "../../models/HR/SalaryModel.js";
 import User from "../../models/HR/UserModel.js";
-import { isAdmin, isEmployee } from "../../controllers/HR/UserControllers.js";
+import { isAdmin , isEmployee } from "./UserControllers.js";
 
 // Generate salary (Admin Only)
 export async function generateSalary(req, res) {
@@ -76,36 +76,35 @@ export async function generateSalary(req, res) {
 // Get all salary details (Admin Only)
 export async function getAllSalaries(req, res) {
     try {
-        if (isAdmin(req)) {
-
+        if (await isAdmin(req)) {
             const salaries = await Salary.find();
             res.json(salaries);
-            
-        }
-        else if(isEmployee(req)){
-            const id = req.user.employeeId;  // Get the authenticated user's email
 
-            Salary.find({ employeeId: id }).then((salaries) => {
-            if (!salaries || salaries.length === 0) {
-                return res.json({ message: "No leave requests found" });
+        } else if (await isEmployee(req)) {
+            const id = req.user?.employeeId;
+            if (!id) {
+                return res.status(400).json({ message: "Employee ID missing" });
             }
-            res.json(salaries);  // Return the leave requests for the employee
-        }).catch(() => {
-            res.status(500).json({
-                message: "Failed to fetch leave requests"
-            });
-        });
-        }
-        else{
-            res.status(404).json({
-                message : "You are not autherized to do it"
-            })
-        }
-        
 
+            const salaries = await Salary.find({ employeeId: id });
+
+            if (!salaries.length) {
+                return res.status(404).json({ message: "No salary records found" });
+            }
+
+            res.json(salaries);
+
+        } else {
+            res.status(403).json({
+                message: "You are not authorized to access salary data."
+            });
+        }
     } catch (error) {
+        console.error("Error fetching salaries:", error);
         res.status(500).json({ 
-            message: "Failed to fetch salary data"
+            message: "Failed to fetch salary data",
+            error: error.message
         });
     }
 }
+

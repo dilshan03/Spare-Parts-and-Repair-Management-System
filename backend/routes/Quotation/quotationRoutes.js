@@ -6,7 +6,7 @@ import {
   deleteQuotation,
   sendQuotationEmail,
   updateQuotationStatus
-} from "../../controllers/quotationController.js";
+} from "../../controllers/Quotation/quotationController.js"; //RY
 
 const router = express.Router();
 

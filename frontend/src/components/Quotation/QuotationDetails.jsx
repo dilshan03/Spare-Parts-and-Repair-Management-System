@@ -12,7 +12,10 @@ const QuotationDetails = () => {
   useEffect(() => {
     const fetchQuotation = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/quotations/${id}`);
+        const token = localStorage.getItem("token");
+        const response = await axios.get(`http://localhost:5000/api/quotations/${id}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
         setQuotation(response.data);
         setError(null);
       } catch (err) {
@@ -22,6 +25,7 @@ const QuotationDetails = () => {
         setLoading(false);
       }
     };
+
     fetchQuotation();
   }, [id]);
 
@@ -50,39 +54,51 @@ const QuotationDetails = () => {
         <h1 className="text-3xl font-bold text-center mb-6">Quotation Details</h1>
         <div className="space-y-4">
           <p className="text-xl">
-            <span className="font-semibold">Customer:</span> {quotation.customerName}
+            <span className="font-semibold">Customer:</span> {quotation?.customerName}
           </p>
           <p className="text-xl">
-            <span className="font-semibold">Email:</span> {quotation.customerEmail}
+            <span className="font-semibold">Email:</span> {quotation?.customerEmail}
           </p>
           <p className="text-xl">
-            <span className="font-semibold">Vehicle Number:</span> {quotation.vehicleNumber}
+            <span className="font-semibold">Vehicle Number:</span> {quotation?.vehicleNumber}
           </p>
+
           <div>
             <h2 className="text-xl font-semibold mb-2">Items:</h2>
-            {quotation.items.map((item, index) => (
-              <p key={index} className="text-lg">
-                {item.itemName} - {item.quantity} x LKR {item.price}
-              </p>
-            ))}
+            {quotation?.items?.length > 0 ? (
+              quotation.items.map((item, index) => (
+                <p key={index} className="text-lg">
+                  {item.itemName} - {item.quantity} x LKR {item.price}
+                </p>
+              ))
+            ) : (
+              <p className="text-gray-500">No items added.</p>
+            )}
           </div>
+
           <div>
             <h2 className="text-xl font-semibold mb-2">Repairs:</h2>
-            {quotation.repairs.map((repair, index) => (
-              <p key={index} className="text-lg">
-                {repair.repairType} - LKR {repair.price}
-              </p>
-            ))}
+            {quotation?.repairs?.length > 0 ? (
+              quotation.repairs.map((repair, index) => (
+                <p key={index} className="text-lg">
+                  {repair.repairType} - LKR {repair.price}
+                </p>
+              ))
+            ) : (
+              <p className="text-gray-500">No repairs listed.</p>
+            )}
           </div>
+
           <p className="text-xl">
-            <span className="font-semibold">Discount:</span> LKR {quotation.discount}
+            <span className="font-semibold">Discount:</span> LKR {quotation?.discount}
           </p>
           <p className="text-xl">
-            <span className="font-semibold">Total Amount:</span> LKR {quotation.totalAmount.toFixed(2)}
+            <span className="font-semibold">Total Amount:</span> LKR {quotation?.totalAmount?.toFixed(2)}
           </p>
         </div>
+
         <Link
-          to="/quotations"
+          to="QuotationDash/"
           className="mt-6 px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors block text-center"
         >
           Back to List

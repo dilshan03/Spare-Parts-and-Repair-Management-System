@@ -5,45 +5,107 @@ import { Link } from 'react-router-dom';
 const QuotationList = () => {
   const [quotations, setQuotations] = useState([]);
 
+  // // Fetch all quotations
+  // useEffect(() => {
+  //   const fetchQuotations = async () => {
+  //     try {
+  //       const token = localStorage.getItem("token");
+  //       const response = await axios.get('http://localhost:5000/api/quotations', {
+  //         headers: { Authorization: `Bearer ${token}` }
+  //       });
+  //       setQuotations(response.data);
+  //     } catch (err) {
+  //       console.error('Error fetching quotations:', err);
+  //     }
+  //   };
+  //   fetchQuotations();
+  // }, []);
+
+  // // Delete a quotation
+  // const handleDelete = async (id) => {
+  //   try {
+  //     const token = localStorage.getItem("token");
+  //     await axios.delete(`http://localhost:5000/api/quotations/${id}`, {
+  //       headers: { Authorization: `Bearer ${token}` }
+  //     });
+  //     setQuotations((prev) => prev.filter((q) => q._id !== id));
+  //     alert('Quotation deleted successfully');
+  //   } catch (err) {
+  //     console.error('Error deleting quotation:', err);
+  //     alert('Error deleting quotation');
+  //   }
+  // };
+
+  // // Update status to accepted or rejected
+  // const handleStatusUpdate = async (id, status) => {
+  //   try {
+  //     const token = localStorage.getItem("token");
+  //     const response = await axios.put(`http://localhost:5000/api/quotations/${id}/status`, { status }, {
+  //       headers: { Authorization: `Bearer ${token}` }
+  //     });
+  //     console.log('Updated Quotation:', response.data); // Debugging response
+  //     setQuotations((prev) =>
+  //       prev.map((q) => (q._id === id ? { ...q, status: response.data.status } : q))
+  //     );
+  //     alert(`Quotation status updated to ${status}`);
+  //   } catch (err) {
+  //     console.error('Error updating status:', err.response ? err.response.data : err.message);
+  //     alert('Error updating status');
+  //   }
+  // };
+
   // Fetch all quotations
-  useEffect(() => {
-    const fetchQuotations = async () => {
-      try {
-        const response = await axios.get('http://localhost:5000/api/quotations');
-        setQuotations(response.data);
-      } catch (err) {
-        console.error('Error fetching quotations:', err);
+useEffect(() => {
+  const fetchQuotations = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.get('http://localhost:5000/api/quotations', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setQuotations(response.data);
+    } catch (err) {
+      console.error('Error fetching quotations:', err);
+    }
+  };
+  fetchQuotations();
+}, []);
+
+// Delete a quotation
+const handleDelete = async (id) => {
+  try {
+    const token = localStorage.getItem("token");
+    await axios.delete(`http://localhost:5000/api/quotations/${id}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    setQuotations((prev) => prev.filter((q) => q._id !== id));
+    alert('Quotation deleted successfully');
+  } catch (err) {
+    console.error('Error deleting quotation:', err);
+    alert('Error deleting quotation');
+  }
+};
+
+// Update status to accepted or rejected
+const handleStatusUpdate = async (id, status) => {
+  try {
+    const token = localStorage.getItem("token");
+    const response = await axios.put(
+      `http://localhost:5000/api/quotations/${id}/status`,
+      { status },
+      {
+        headers: { Authorization: `Bearer ${token}` }
       }
-    };
-    fetchQuotations();
-  }, []);
-
-  // Delete a quotation
-  const handleDelete = async (id) => {
-    try {
-      await axios.delete(`http://localhost:5000/api/quotations/${id}`);
-      setQuotations((prev) => prev.filter((q) => q._id !== id));
-      alert('Quotation deleted successfully');
-    } catch (err) {
-      console.error('Error deleting quotation:', err);
-      alert('Error deleting quotation');
-    }
-  };
-
-  // Update status to accepted or rejected
-  const handleStatusUpdate = async (id, status) => {
-    try {
-      const response = await axios.put(`http://localhost:5000/api/quotations/${id}/status`, { status });
-      console.log('Updated Quotation:', response.data); // Debugging response
-      setQuotations((prev) =>
-        prev.map((q) => (q._id === id ? { ...q, status: response.data.status } : q))
-      );
-      alert(`Quotation status updated to ${status}`);
-    } catch (err) {
-      console.error('Error updating status:', err.response ? err.response.data : err.message);
-      alert('Error updating status');
-    }
-  };
+    );
+    console.log('Updated Quotation:', response.data); // Debugging response
+    setQuotations((prev) =>
+      prev.map((q) => (q._id === id ? { ...q, status: response.data.status } : q))
+    );
+    alert(`Quotation status updated to ${status}`);
+  } catch (err) {
+    console.error('Error updating status:', err.response ? err.response.data : err.message);
+    alert('Error updating status');
+  }
+};
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-md max-w-4xl mx-auto my-8">
@@ -58,7 +120,7 @@ const QuotationList = () => {
               </p>
               <div className="flex space-x-4">
                 <Link
-                  to={`/quotations/${quotation._id}`}
+                  to={`${quotation._id}`}
                   className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
                 >
                   View Details
