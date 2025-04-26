@@ -7,7 +7,7 @@ import {
   getBalanceSheetById,
   downloadBalanceSheetPDF,
   downloadBalanceSheetByIdPDF,
-} from "../../controllers/balanceSheetController.js";
+} from "../../controllers/Finance/balanceSheetController.js"; // Adjust the path as necessary
 
 
 
