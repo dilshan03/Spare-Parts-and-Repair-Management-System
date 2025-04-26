@@ -53,6 +53,13 @@ app.options("*", cors(corsOptions));
 app.use(bodyParser.json({ limit: "100mb" }));  // Increase JSON limit to 50MB //RY
 app.use(bodyParser.urlencoded({ limit: "100mb", extended: true }));  // Increase form-data limit //RY
 
+// Mount routes with /api prefix
+// app.use("/api/employees", userRoute);
+// app.use("/api/leaves", leaveRouter);
+// app.use("/api/salary", salaryRouter);
+// app.use("/api/repairs", RepairRoute);
+// app.use("/api/repairRequest", RepairRequestFromRoute);
+// app.use("/api/jobCards", jobCardRoutes);
 
 
 app.use((req,res,next)=>{
@@ -74,7 +81,7 @@ app.use((req,res,next)=>{
 
     if(token){
         token = token.replace("Bearer ", "");
-        jwt.verify(token, process.env.JWT_SECRET, (error, decoded) => {
+        jwt.verify(token, process.env.jwt, (error, decoded) => {
             if(error){
                 res.status(401).json({
                     error : "Invalid token"
