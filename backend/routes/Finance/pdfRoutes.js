@@ -1,5 +1,5 @@
 import express from "express";
-import { generateBankStatementPDF } from "../controllers/pdfController.js";
+import { generateBankStatementPDF } from "../../controllers/Finance/pdfController.js";
 
 const router = express.Router();
 router.get("/generate-statement/:accountId", generateBankStatementPDF);

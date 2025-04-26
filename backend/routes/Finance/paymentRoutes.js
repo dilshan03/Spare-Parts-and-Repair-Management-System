@@ -1,8 +1,8 @@
 import express from "express";
 import multer from "multer";
 import nodemailer from "nodemailer";
-import Payment from "../models/Payment.js";
-import MockCard from "../models/MockCard.js";
+import Payment from "../../models/Finance/Payment.js";
+import MockCard from "../../models/Finance/MockCard.js";
 
 const router = express.Router();
 

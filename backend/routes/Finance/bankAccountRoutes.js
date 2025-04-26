@@ -4,7 +4,7 @@ import {
     updateBankAccount,
     deleteBankAccount,
     getAllBankAccounts
-} from '../controllers/bankAccountController.js';
+} from '../../controllers/Finance/bankAccountController.js';
 
 const router = express.Router();
 

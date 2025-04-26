@@ -1,5 +1,5 @@
-import BankAccount from "../models/BankAccount.js";
-import BankBookTransaction from "../models/BankBookTransaction.js";
+import BankAccount from "../../models/Finance/BankAccount.js";
+import BankBookTransaction from "../../models/Finance/BankBookTransaction.js";
 
 // Create a new Bank Account
 export const createBankAccount = async (req, res) => {

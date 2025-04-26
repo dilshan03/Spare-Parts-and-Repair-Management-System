@@ -1,4 +1,4 @@
-import Transaction from "../models/Transaction.js";
+import Transaction from "../../models/Finance/Transaction.js";
 //const Transaction = require("../models/TransactionModel");
 /*
 // ✅ 1. Add Transaction (Triggered after successful payment)

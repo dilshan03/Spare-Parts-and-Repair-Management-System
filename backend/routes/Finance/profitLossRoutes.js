@@ -2,7 +2,7 @@ import express from 'express';
 import PDFDocument from 'pdfkit';
 import path from 'path';
 import fs from 'fs';
-import ProfitLoss from '../models/ProfitLoss.js';
+import ProfitLoss from '../../models/Finance/ProfitLoss.js';
 
 const router = express.Router();
 

@@ -2,7 +2,7 @@ import PDFDocument from "pdfkit";
 import fs from "fs";
 import path from "path";
 import excelJS from "exceljs";
-import Transaction from "../models/Transaction.js";
+import Transaction from "../../models/Finance/Transaction.js";
 
 // Generate PDF Report
 const generatePDFReport = async (req, res) => {

@@ -1,5 +1,5 @@
-import BankBookTransaction from "../models/BankBookTransaction.js";
-import BankAccount from "../models/BankAccount.js";
+import BankBookTransaction from "../../models/Finance/BankBookTransaction.js";
+import BankAccount from "../../models/Finance/BankAccount.js";
 
 // POST /api/bank-book/:accountId/add-transaction
 export const addTransactionToAccount = async (req, res) => {

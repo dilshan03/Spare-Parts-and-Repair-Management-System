@@ -7,10 +7,10 @@ import {
   getBalanceSheetById,
   downloadBalanceSheetPDF,
   downloadBalanceSheetByIdPDF,
-} from "../controllers/balanceSheetController.js";
+} from "../../controllers/Finance/balanceSheetController.js";
 
-import PettyCash from '../models/PettyCash.js';
-import Allocation from '../models/PettyCashAllocation.js';
+import PettyCash from '../../models/Finance/PettyCash.js';
+import Allocation from '../../models/Finance/PettyCashAllocation.js';
 
 
 const router = express.Router();

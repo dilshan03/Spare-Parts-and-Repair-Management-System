@@ -1,8 +1,8 @@
 //for bank book management
 
 import PDFDocument from "pdfkit";
-import BankBookTransaction from "../models/BankBookTransaction.js";
-import BankAccount from "../models/BankAccount.js";
+import BankBookTransaction from "../../models/Finance/BankBookTransaction.js";
+import BankAccount from "../../models/Finance/BankAccount.js";
 
 export const generateBankStatementPDF = async (req, res) => {
   try {
