@@ -14,7 +14,7 @@ import UpdatePassword from './pages/HR/UpdatePassword'
 import RepairDashBoard from './pages/Repair/RepairDashBoard.jsx'
 import QuotationDashBoard from './pages/Quotation/QuotationDashBoard.jsx'
 
-//import FinanceDashboard from './components/FinanceDashboard'
+import FinanceDashboard from './components/Finance/FinanceDashboard.jsx'
 
 import StaffPage from './components/StaffPage';
 import AboutUsPage from './components/AboutUsPage';
@@ -44,7 +44,7 @@ function App() {
         <Route path="/employeeProfile" element={<EmployeeProfile />} />
         <Route path="/employeeProfile/leave" element={<LeaveRequest/>} />
         <Route path="/api/reset-password" element={< UpdatePassword/>} />
-        {/*<Route path="/finance-dashboard" element={<FinanceDashboard/>} /> */}
+        <Route path="/finance-dashboard" element={<FinanceDashboard/>} /> 
         <Route path="/RepairadminDash/*" element={<RepairDashBoard />} />
         <Route path="/QuotationDash/*" element={<QuotationDashBoard />} />
 
