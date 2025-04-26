@@ -124,17 +124,43 @@ const CreateQuotation = () => {
   };
 
   // Handle form submission
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     const token = localStorage.getItem("token");//RY
+  //     const response = await axios.post('http://localhost:5000/api/quotations', formData);
+  //     setQuotationId(response.data._id); // Store the quotation ID
+  //     alert('Quotation created successfully');
+  //   } catch (err) {
+  //     console.error('Error creating quotation:', err.response?.data || err.message);
+  //     alert('Error creating quotation: ' + (err.response?.data?.error || err.message));
+  //   }
+  // };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/api/quotations', formData);
+      const token = localStorage.getItem("token"); // RY
+      const response = await axios.post(
+        'http://localhost:5000/api/quotations',
+        formData, // <-- Data object (quotation details)
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Add Bearer token header
+            "Content-Type": "application/json"
+          }
+        }
+      );
       setQuotationId(response.data._id); // Store the quotation ID
       alert('Quotation created successfully');
+      navigate('/quotations'); // Redirect to quotations page or another route
     } catch (err) {
       console.error('Error creating quotation:', err.response?.data || err.message);
       alert('Error creating quotation: ' + (err.response?.data?.error || err.message));
     }
   };
+  
+  
 
   // Send quotation email
   const sendEmail = async () => {
@@ -143,8 +169,23 @@ const CreateQuotation = () => {
       return;
     }
     try {
-      await axios.post(`http://localhost:5000/api/quotations/send-email/${quotationId}`);
+      // const token = localStorage.getItem("token");//RY
+      // await axios.post(`http://localhost:5000/api/quotations/send-email/${quotationId}`, {//RT
+      //   headers: { Authorization: `Bearer ${token}` }
+      // })//RY
+      // alert('Email sent successfully');
+      const token = localStorage.getItem("token"); // RY
+
+      await axios.post(
+        `http://localhost:5000/api/quotations/send-email/${quotationId}`, // RT
+        {}, // 🛑 Second parameter = data object (empty {} if no data to send)
+        {
+          headers: { Authorization: `Bearer ${token}` }
+        }
+      ); // RY
+
       alert('Email sent successfully');
+
 
       // Reset the form only after the email is sent
       setFormData({
@@ -364,7 +405,7 @@ const CreateQuotation = () => {
           <Button
             variant="contained"
             color="info"
-            onClick={() => navigate('/quotations')}
+            onClick={() => navigate('/QuotationDash/quotations')}
           >
             View Quotation History
           </Button>

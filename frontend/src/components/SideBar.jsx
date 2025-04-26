@@ -15,7 +15,7 @@ const Sidebar = () => {
           Employee Dashboard
         </Link>
 
-        <Link to="/quotation-dashboard" className="block px-4 py-2 rounded-lg hover:bg-gray-700 transition">
+        <Link to="/QuotationDash/" className="block px-4 py-2 rounded-lg hover:bg-gray-700 transition">
           Quotation History
         </Link>
 

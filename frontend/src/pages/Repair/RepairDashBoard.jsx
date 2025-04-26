@@ -36,7 +36,7 @@ function DashBoard() {
           </h2>
           <nav style={styles.nav}>
             <Link to="/" style={styles.navLink}>
-              <i className="fas fa-home"> </i> Home
+              <i className="fas fa-home"> </i> Repair Home
             </Link>
             <Link to="/RepairadminDash/RepairReqList" style={styles.navLink}>
               <i className="fas fa-box"> </i> Repair Requests

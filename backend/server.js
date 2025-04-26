@@ -10,8 +10,10 @@ import dotenv from "dotenv";
 import leaveRouter from "./routes/HR/LeaveRoute.js";
 import salaryRouter from "./routes/HR/SalaryRoute.js";
 import RepairRequestFromRoute from "./routes/Repair/RepairRequestFromRoute.js";//RY
-import RepairRoute from "./routes/Repair/RepairRoutes.js"; // Import Repair Rout
-import jobCardRoutes from "./routes/Repair/JobCardRoutes.js";
+import RepairRoute from "./routes/Repair/RepairRoutes.js"; //RY
+import jobCardRoutes from "./routes/Repair/JobCardRoutes.js";//RY
+
+import quotationRoutes from "./routes/Quotation/quotationRoutes.js";//RY
 
 import financeRoutes from "./routes/Finance/finance.js"; //Esandi
 import balanceSheetRoutes from './routes/Finance/balanceSheetRoutes.js';//Esandi
@@ -20,6 +22,8 @@ import profitLossRoutes from './routes/Finance/profitLossRoutes.js'; //Esandi
 import pettyCashRoutes from './routes/Finance/pettyCashRoutes.js'; //Esandi
 import paymentRoutes from './routes/Finance/paymentRoutes.js'; //Esandi
 import bankAccountRoutes from './routes/Finance/bankAccountRoutes.js'; //Esandi
+
+
 //import pdfRoutes from "./routes/pdfRoutes.js";
 
 
@@ -49,13 +53,6 @@ app.options("*", cors(corsOptions));
 app.use(bodyParser.json({ limit: "100mb" }));  // Increase JSON limit to 50MB //RY
 app.use(bodyParser.urlencoded({ limit: "100mb", extended: true }));  // Increase form-data limit //RY
 
-// Mount routes with /api prefix
-app.use("/api/employees", userRoute);
-app.use("/api/leaves", leaveRouter);
-app.use("/api/salary", salaryRouter);
-app.use("/api/repairs", RepairRoute);
-app.use("/api/repairRequest", RepairRequestFromRoute);
-app.use("/api/jobCards", jobCardRoutes);
 
 
 app.use((req,res,next)=>{
@@ -116,20 +113,23 @@ conn.once("open",()=>{
 app.use("/api/employees", userRoute); //ID
 app.use("/api/leave", leaveRouter); //ID
 app.use("/api/salary", salaryRouter); //ID
+
 app.use("/api/repairRequest", RepairRequestFromRoute); //RY
 app.use("/api/repairs", RepairRoute); //RY
 app.use("/api/jobCards", jobCardRoutes); //RY
 
+app.use("/api/quotations", quotationRoutes); //Dilshan
 
-app.use('/api/payments', paymentRoutes);
-app.use('/api/balance-sheet', balanceSheetRoutes);
-app.use('/api/bank-book', bankBookRoutes);
-app.use('/api/bank-account', bankAccountRoutes);
-app.use('/api/profit-loss', profitLossRoutes);
-app.use('/api/pettycash', pettyCashRoutes);
-app.use("/api/finance", financeRoutes); // Use finance routes
-app.use("/api", financeRoutes);;
-app.use('/api/profit-loss', profitLossRoutes);
+
+app.use('/api/payments', paymentRoutes);//Esandi
+app.use('/api/balance-sheet', balanceSheetRoutes);//Esandi
+app.use('/api/bank-book', bankBookRoutes);//Esandi
+app.use('/api/bank-account', bankAccountRoutes);//Esandi
+app.use('/api/profit-loss', profitLossRoutes);//Esandi
+app.use('/api/pettycash', pettyCashRoutes);//Esandi
+app.use("/api/finance", financeRoutes); //Esandi
+app.use("/api", financeRoutes);;//Esandi
+app.use('/api/profit-loss', profitLossRoutes);//Esandi
 //app.use("/api/pdf", pdfRoutes);
 
 
