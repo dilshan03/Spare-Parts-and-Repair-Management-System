@@ -1,19 +1,18 @@
 import express from "express";
-
-
 import {
-    addTransaction,
-    updateTransaction,
-    deleteTransaction,
-    getAllTransactions
-  } from "../../controllers/Finance/bankBookController.js"; // Adjust the path as necessary
+  addTransactionToAccount,
+  getTransactionsByAccount,
+  updateTransaction,
+  deleteTransaction,
+  getAllTransactions,
+} from "../controllers/bankBookController.js";
 
 const router = express.Router();
 
-// Route for adding a transaction to the bank book
-router.post("/add-transaction", addTransaction);
-router.put("/transaction/update/:transactionId", updateTransaction);
-router.delete("/transaction/delete/:transactionId", deleteTransaction);
-router.get("/transactions", getAllTransactions);
+router.post("/:accountId/add-transaction", addTransactionToAccount);
+router.get("/:accountId/transactions", getTransactionsByAccount);
+router.put("/transaction/:transactionId", updateTransaction);
+router.delete("/transaction/:transactionId", deleteTransaction);
+router.get("/", getAllTransactions);
 
 export default router;
