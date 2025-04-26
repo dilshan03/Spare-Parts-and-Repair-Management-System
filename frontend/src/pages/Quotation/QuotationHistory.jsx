@@ -6,13 +6,19 @@ const QuotationHistory = () => {
   const [quotations, setQuotations] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/quotations')
+    const token = localStorage.getItem("token");//RY
+    axios.get('http://localhost:5000/api/quotations', {//RT
+      headers: { Authorization: `Bearer ${token}` }
+    })
       .then(res => setQuotations(res.data))
       .catch(err => console.log(err));
   }, []);
 
   const handleDelete = (id) => {
-    axios.delete(`http://localhost:5000/api/quotations/${id}`)
+    const token = localStorage.getItem("token");//RY
+    axios.delete(`http://localhost:5000/api/quotations/${id}`, {//RT
+      headers: { Authorization: `Bearer ${token}` }
+    })//RY
       .then(() => setQuotations(quotations.filter(q => q._id !== id)))
       .catch(err => console.log(err));
   };

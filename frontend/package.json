@@ -10,8 +10,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
     "@heroicons/react": "^2.1.1",
     "@hookform/error-message": "^2.0.1",
+    "@mui/icons-material": "^7.0.2",
+    "@mui/material": "^7.0.2",
     "@tailwindcss/vite": "^4.1.4",
     "axios": "^1.8.4",
     "bootstrap": "^5.3.5",
