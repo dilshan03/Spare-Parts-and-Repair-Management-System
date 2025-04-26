@@ -1,6 +1,6 @@
 import express from 'express';
 import PDFDocument from 'pdfkit';
-import PettyCash from '../../models/PettyCash.js';
+import PettyCash from '../../models/Finance/PettyCash.js';
 
 const router = express.Router();
 

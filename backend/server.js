@@ -12,6 +12,19 @@ import salaryRouter from "./routes/HR/SalaryRoute.js";
 import RepairRequestFromRoute from "./routes/Repair/RepairRequestFromRoute.js";//RY
 import RepairRoute from "./routes/Repair/RepairRoutes.js"; // Import Repair Rout
 import jobCardRoutes from "./routes/Repair/JobCardRoutes.js";
+
+import financeRoutes from "./routes/Finance/finance.js"; //Esandi
+import balanceSheetRoutes from './routes/Finance/balanceSheetRoutes.js';//Esandi
+import bankBookRoutes from './routes/Finance/bankBookRoutes.js'; //Esandi
+import profitLossRoutes from './routes/Finance/profitLossRoutes.js'; //Esandi
+import pettyCashRoutes from './routes/Finance/pettyCashRoutes.js'; //Esandi
+import paymentRoutes from './routes/Finance/paymentRoutes.js'; //Esandi
+import bankAccountRoutes from './routes/Finance/bankAccountRoutes.js'; //Esandi
+//import pdfRoutes from "./routes/pdfRoutes.js";
+
+
+
+
 import cors from "cors";
 
 dotenv.config();
@@ -98,6 +111,18 @@ app.use("/api/salary", salaryRouter); //ID
 app.use("/api/repair-request", RepairRequestFromRoute); //RY
 app.use("/api/repairs", RepairRoute); //RY
 app.use("/api/job-cards", jobCardRoutes); //RY
+
+
+app.use('/api/payments', paymentRoutes);
+app.use('/api/balance-sheet', balanceSheetRoutes);
+app.use('/api/bank-book', bankBookRoutes);
+app.use('/api/bank-account', bankAccountRoutes);
+app.use('/api/profit-loss', profitLossRoutes);
+app.use('/api/pettycash', pettyCashRoutes);
+app.use("/api/finance", financeRoutes); // Use finance routes
+app.use("/api", financeRoutes);;
+app.use('/api/profit-loss', profitLossRoutes);
+//app.use("/api/pdf", pdfRoutes);
 
 
 app.listen(5000,()=>{

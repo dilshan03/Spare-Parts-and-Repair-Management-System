@@ -1,5 +1,5 @@
 import express from "express";
-import transactionController from "../../controllers/transactionController.js"; // ✅ Import as default
+import transactionController from "../../controllers/Finance/transactionController.js"; // ✅ Import as default
 const router = express.Router();
 
 // Add a new transaction (Triggered when payment is successful)
