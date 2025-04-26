@@ -22,9 +22,7 @@ import profitLossRoutes from './routes/Finance/profitLossRoutes.js'; //Esandi
 import pettyCashRoutes from './routes/Finance/pettyCashRoutes.js'; //Esandi
 import paymentRoutes from './routes/Finance/paymentRoutes.js'; //Esandi
 import bankAccountRoutes from './routes/Finance/bankAccountRoutes.js'; //Esandi
-
-
-//import pdfRoutes from "./routes/pdfRoutes.js";
+import pdfRoutes from "./routes/Finance/pdfRoutes.js";
 
 
 
@@ -53,13 +51,6 @@ app.options("*", cors(corsOptions));
 app.use(bodyParser.json({ limit: "100mb" }));  // Increase JSON limit to 50MB //RY
 app.use(bodyParser.urlencoded({ limit: "100mb", extended: true }));  // Increase form-data limit //RY
 
-// Mount routes with /api prefix
-// app.use("/api/employees", userRoute);
-// app.use("/api/leaves", leaveRouter);
-// app.use("/api/salary", salaryRouter);
-// app.use("/api/repairs", RepairRoute);
-// app.use("/api/repairRequest", RepairRequestFromRoute);
-// app.use("/api/jobCards", jobCardRoutes);
 
 
 app.use((req,res,next)=>{
@@ -137,7 +128,7 @@ app.use('/api/pettycash', pettyCashRoutes);//Esandi
 app.use("/api/finance", financeRoutes); //Esandi
 app.use("/api", financeRoutes);;//Esandi
 app.use('/api/profit-loss', profitLossRoutes);//Esandi
-//app.use("/api/pdf", pdfRoutes);
+app.use("/api/pdf", pdfRoutes);
 
 
 app.listen(5000,()=>{
