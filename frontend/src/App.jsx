@@ -13,12 +13,14 @@ import LeaveRequest from './pages/HR/LeaveRequest'
 import UpdatePassword from './pages/HR/UpdatePassword'
 import RepairDashBoard from './pages/Repair/RepairDashBoard.jsx'
 import QuotationDashBoard from './pages/Quotation/QuotationDashBoard.jsx'
+import ServiceDashboard from './pages/Service/ServiceDashboard.jsx'
 
 import FinanceDashboard from './components/Finance/FinanceDashboard.jsx'
 
 import StaffPage from './components/StaffPage';
 import AboutUsPage from './components/AboutUsPage';
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
+import AppointmentForm from './components/Service/AppointmentForm.jsx';
 //import Sidebar from "./Components/Sidebar"; // Import Sidebar component
 
 
@@ -47,6 +49,8 @@ function App() {
         <Route path="/finance-dashboard" element={<FinanceDashboard/>} /> 
         <Route path="/RepairadminDash/*" element={<RepairDashBoard />} />
         <Route path="/QuotationDash/*" element={<QuotationDashBoard />} />
+        <Route path="/ServiceDash/*" element={<ServiceDashboard />} />
+        <Route path="/appointments/" element={<AppointmentForm />} />
 
       </Routes>
       <Footer />

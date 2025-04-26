@@ -23,7 +23,7 @@ const Sidebar = () => {
           Repair Job Requests
         </Link>
 
-        <Link to="/appointment-dashboard" className="block px-4 py-2 rounded-lg hover:bg-gray-700 transition">
+        <Link to="/ServiceDash" className="block px-4 py-2 rounded-lg hover:bg-gray-700 transition">
           Service Appointments
         </Link>
         
