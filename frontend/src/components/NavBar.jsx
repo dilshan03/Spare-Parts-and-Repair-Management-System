@@ -32,6 +32,11 @@ const Navbar = () => {
           </Link>
         </li>
         <li>
+          <Link to="/import" className="hover:text-orange-500 transition-colors duration-300">
+            Import vehicle
+          </Link>
+        </li>
+        <li>
           <Link to="/about-us" className="hover:text-orange-500 transition-colors duration-300">
             About Us
           </Link>
