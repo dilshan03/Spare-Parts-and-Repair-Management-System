@@ -128,7 +128,7 @@ const JobCardDetail = () => {
         const token = localStorage.getItem("token"); // ✅ Get token from local storage
         const headers = token ? { Authorization: `Bearer ${token}` } : {};
         setLoading(true);
-        const response = await axios.get(`http://localhost:5000/jobCards/${id}`, { headers });
+        const response = await axios.get(`http://localhost:5000/api/jobCards/${id}`, { headers });
         setJobCard(response.data);
       } catch (error) {
         toast.error("Failed to fetch job card details");
@@ -161,7 +161,7 @@ const JobCardDetail = () => {
       updatedJobs[jobIndex] = updatedJob;
   
       const response = await axios.put(
-        `http://localhost:5000/jobCards/${id}`,
+        `http://localhost:5000/api/jobCards/${id}`,
         { jobs: updatedJobs },
         { headers }
       );
@@ -185,7 +185,7 @@ const JobCardDetail = () => {
       const updatedJobs = [...jobCard.jobs, newJob];
   
       const response = await axios.put(
-        `http://localhost:5000/jobCards/${id}`,
+        `http://localhost:5000/api/jobCards/${id}`,
         { jobs: updatedJobs },
         { headers }
       );
@@ -216,7 +216,7 @@ const JobCardDetail = () => {
       const updatedJobs = jobCard.jobs.filter((_, index) => index !== jobIndex);
   
       const response = await axios.put(
-        `http://localhost:5000/jobCards/${id}`,
+        `http://localhost:5000/api/jobCards/${id}`,
         { jobs: updatedJobs },
         { headers }
       );

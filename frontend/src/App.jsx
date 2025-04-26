@@ -11,6 +11,7 @@ import AdminPanel from './components/AdminPanel';
 import EmployeeProfile from './pages/HR/EmployeeProfile'
 import LeaveRequest from './pages/HR/LeaveRequest'
 import UpdatePassword from './pages/HR/UpdatePassword'
+import RepairDashBoard from './pages/Repair/RepairDashBoard.jsx'
 
 //import FinanceDashboard from './components/FinanceDashboard'
 
@@ -43,9 +44,11 @@ function App() {
         <Route path="/employeeProfile/leave" element={<LeaveRequest/>} />
         <Route path="/api/reset-password" element={< UpdatePassword/>} />
         {/*<Route path="/finance-dashboard" element={<FinanceDashboard/>} /> */}
+        <Route path="/RepairadminDash/*" element={<RepairDashBoard />} />
 
       </Routes>
       <Footer />
+      {/* <RepairDashBoard/> */}
     </Router>
   );
 }

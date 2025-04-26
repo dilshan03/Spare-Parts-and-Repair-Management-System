@@ -30,13 +30,24 @@ const App = () => {
     setLoading(true);
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get("http://localhost:5000/repairs/get-all-repairs/", {
+      if (!token) {
+        setError("You must be logged in to view repairs");
+        navigate("/login");
+        return;
+      }
+      const response = await axios.get("http://localhost:5000/api/repairs/get-all-repairs", {
         headers: { Authorization: `Bearer ${token}` }
       });
       setRepairs(response.data);
     } catch (error) {
       console.error("Error fetching repairs:", error);
-      setError("Failed to fetch repairs. Please try again later.");
+      if (error.response?.status === 401) {
+        setError("Session expired. Please login again.");
+        localStorage.removeItem("token");
+        navigate("/login");
+      } else {
+        setError("Failed to fetch repairs. Please try again later.");
+      }
     } finally {
       setLoading(false);
     }
@@ -55,7 +66,7 @@ const App = () => {
       const token = localStorage.getItem("token");
       toast.info("Sending email...");
       
-      const response = await axios.post(`http://localhost:5000/repairs/send-email/${repairId}`, {}, {
+      const response = await axios.post(`http://localhost:5000/api/repairs/send-email/${repairId}`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
       
@@ -104,7 +115,7 @@ const App = () => {
       }
 
       await axios.put(
-        `http://localhost:5000/repairs/${selectedRepair._id}`,
+        `http://localhost:5000/api/repairs/${selectedRepair._id}`,
         updateData,
         { headers: { Authorization: `Bearer ${token}` }}
       );
@@ -124,7 +135,7 @@ const App = () => {
   const createRepairsForAllRequestForms = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.post("http://localhost:5000/repairs/create-from-all-request-forms", {}, {
+      const response = await axios.post("http://localhost:5000/api/repairs/create-from-all-request-forms", {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
       console.log("Repairs created:", response.data);
