@@ -3,7 +3,8 @@ import Navbar from './components/NavBar';
 import Hero from './components/Hero';
 import Categories from './components/Categories';
 import Footer from './components/Footer';
-import AdminDashboard from './components/AdminDashboard';
+import AdminDashboard from './components/AdminDashboard'; 
+import RepairRequestFrom from './components/Repair/RepairRequestFrom.jsx';
 import Login from './pages/HR/Login.jsx';
 import { Toaster } from 'react-hot-toast';
 
@@ -53,6 +54,7 @@ function App() {
         <Route path="/ServiceDash/*" element={<ServiceDashboard />} />
         <Route path="/appointments/" element={<AppointmentForm />} />
         <Route path="/import/" element={<ImportDashboard />} />
+        <Route path="/repairRequestFrom" element={<RepairRequestFrom />} />
 
       </Routes>
       <Footer />

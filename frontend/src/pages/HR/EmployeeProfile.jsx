@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { toast } from "react-hot-toast";
+import { toast } from "react-hot-toast"; 
+import JobCardListForMechnic from "../../components/Repair/JobCardListForMechnic.jsx";
+
 
 export default function EmployeeProfile() {
   const location = useLocation();
@@ -173,6 +175,8 @@ export default function EmployeeProfile() {
           </div>
         </div>
 
+        {/* <JobCardListForMechnicProfile mechanicId={employee._id}/> */}
+        <JobCardListForMechnic/>
         <div className="flex justify-between mt-6">
           <button
             onClick={() => navigate("/employeeProfile/leave", { state: employee })}

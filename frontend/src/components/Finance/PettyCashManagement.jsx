@@ -106,7 +106,21 @@ const PettyCashManagement = () => {
     }
     if (Object.keys(errors).length) return;
     try {
-      const payload = { ...newTransaction, transactionDate: newTransaction.transactionDate.toISOString() };
+      // Create a new date with today's time if the selected date is today
+    let transactionDateTime;
+    const selectedDate = new Date(newTransaction.transactionDate);
+    const today = new Date();
+    
+    if (selectedDate.toDateString() === today.toDateString()) {
+      // If the selected date is today, use the current time
+      transactionDateTime = new Date();
+    } else {
+      // If it's a past date, set time to start of that day
+      transactionDateTime = selectedDate;
+      transactionDateTime.setHours(0, 0, 0, 0);
+    }
+    
+    const payload = { ...newTransaction, transactionDate: transactionDateTime.toISOString() };
       if (newTransaction.id) {
         const token = localStorage.getItem("token");
         await axios.put(`http://localhost:5000/api/pettycash/update/${newTransaction.id}`, payload,{
@@ -130,9 +144,8 @@ const PettyCashManagement = () => {
   // Delete
   const handleDelete = async (id) => {
     try {
-      const token = localStorage.getItem("token");
       await axios.delete(`http://localhost:5000/api/pettycash/delete/${id}`,{
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
       setSuccessMessage("Transaction deleted successfully!");
       fetchEntries();
@@ -153,9 +166,10 @@ const PettyCashManagement = () => {
   const handleGenerateReport = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get("http://localhost:5000/api/pettycash/generate-report", { responseType: 'blob',
-        headers: { Authorization: `Bearer ${token}` },
-       });
+      const response = await axios.get("http://localhost:5000/api/pettycash/generate-report",
+         { responseType: 'blob',
+          headers: { Authorization: `Bearer ${token}` }
+          });
       const blob = new Blob([response.data], { type: 'application/pdf' });
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');

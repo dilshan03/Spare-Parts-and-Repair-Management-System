@@ -19,108 +19,7 @@ const JobCardDetail = () => {
     jobCost: 0
   });
 
-  // useEffect(() => {
-  //   const fetchJobCard = async () => {
-  //     try {
-  //       const token = localStorage.getItem("token"); // ✅ Get token from local storage
-  //       setLoading(true);
-  //       const response = await axios.get(`http://localhost:5000/jobCards/${id}`, {
-  //         headers: { Authorization: `Bearer ${token}` } // ✅ Attach token to headers
-  //       });
-  //      setJobCard(response.data);
-  //     } catch (error) {
-  //       toast.error("Failed to fetch job card details");
-  //       console.error("Error:", error);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   fetchJobCard();
-  // }, [id]);
-
-  //   //convert binary
-  //   const arrayBufferToBase64 = (arrayBuffer) => {
-  //     let binary = "";
-  //     let bytes = new Uint8Array(arrayBuffer || []);
-  //     for (let i = 0; i < bytes.length; i++) {
-  //       binary += String.fromCharCode(bytes[i]);
-  //     }
-  //     return window.btoa(binary);
-  //   };
-
-  // const handleJobUpdate = async (jobIndex, updatedJob) => {
-  //   try {
-  //     const token = localStorage.getItem("token"); // ✅ Get token from local storage
-  //     setUpdating(true);
-  //     const updatedJobs = [...jobCard.jobs];
-  //     updatedJobs[jobIndex] = updatedJob;
-      
-  //     const response = await axios.put(`http://localhost:5000/jobCards/${id}`, {
-  //       headers: { Authorization: `Bearer ${token}` } // ✅ Attach token to headers
-  //     }),
-  //       jobs: updatedJobs
-  //     });
-      
-  //     setJobCard(response.data);
-  //     toast.success("Job updated successfully");
-  //   } catch (error) {
-  //     toast.error("Failed to update job");
-  //     console.error("Error:", error);
-  //   } finally {
-  //     setUpdating(false);
-  //   }
-  // };
-
-  // const handleAddJob = async () => {
-  //   try {
-  //     const token = localStorage.getItem("token"); // ✅ Get token from local storage
-  //     setUpdating(true);
-  //     const updatedJobs = [...jobCard.jobs, newJob];
-      
-  //     const response = await axios.put(`http://localhost:5000/jobCards/${id}`, {
-  //       headers: { Authorization: `Bearer ${token}` } // ✅ Attach token to headers
-  //     }),
-      
-  //     setJobCard(response.data);
-  //     setNewJob({
-  //       jobName: "",
-  //       jobDescription: "",
-  //       jobStatus: "Pending",
-  //       jobCost: 0
-  //     });
-  //     setShowAddJobModal(false);
-  //     toast.success("New job added successfully");
-  //   } catch (error) {
-  //     toast.error("Failed to add new job");
-  //     console.error("Error:", error);
-  //   } finally {
-  //     setUpdating(false);
-  //   }
-  // };
-
-  // const handleRemoveJob = async (jobIndex) => {
-  //   try {
-  //     const token = localStorage.getItem("token"); // ✅ Get token from local storage
-  //     setUpdating(true);
-  //     const updatedJobs = jobCard.jobs.filter((_, index) => index !== jobIndex);
-      
-  //     const response = await axios.put(`http://localhost:5000/jobCards/${id}`, {
-  //       headers: { Authorization: `Bearer ${token}` } // ✅ Attach token to headers
-  //     }), {
-  //       jobs: updatedJobs
-  //     });
-      
-  //     setJobCard(response.data);
-  //     toast.success("Job removed successfully");
-  //   } catch (error) {
-  //     toast.error("Failed to remove job");
-  //     console.error("Error:", error);
-  //   } finally {
-  //     setUpdating(false);
-  //   }
-  // };
-
+ 
   useEffect(() => {
     const fetchJobCard = async () => {
       try {
@@ -176,36 +75,7 @@ const JobCardDetail = () => {
     }
   };
   
-  const handleAddJob = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      setUpdating(true);
-      const updatedJobs = [...jobCard.jobs, newJob];
-  
-      const response = await axios.put(
-        `http://localhost:5000/api/jobCards/${id}`,
-        { jobs: updatedJobs },
-        {
-          headers: { Authorization: `Bearer ${token}` }
-        }
-      );
-  
-      setJobCard(response.data);
-      setNewJob({
-        jobName: "",
-        jobDescription: "",
-        jobStatus: "Pending",
-        jobCost: 0
-      });
-      setShowAddJobModal(false);
-      toast.success("New job added successfully");
-    } catch (error) {
-      toast.error("Failed to add new job");
-      console.error("Error:", error);
-    } finally {
-      setUpdating(false);
-    }
-  };
+
   
   const handleRemoveJob = async (jobIndex) => {
     try {
@@ -329,9 +199,6 @@ const JobCardDetail = () => {
       <div className="card">
         <div className="card-header d-flex justify-content-between align-items-center" style={{backgroundColor: "black", color: "white"}}>
           <h4>My Jobs</h4>
-          {/* <Button variant="primary" size="sm" onClick={() => setShowAddJobModal(true)}>
-            Add New Job
-          </Button> */}
         </div>
         <div className="card-body">
           <Table striped bordered hover>
@@ -359,68 +226,6 @@ const JobCardDetail = () => {
           </Table>
         </div>
       </div>
-
-      {/* Add Job Modal
-      <Modal show={showAddJobModal} onHide={() => setShowAddJobModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Add New Job</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form>
-            <Form.Group className="mb-3">
-              <Form.Label>Job Name *</Form.Label>
-              <Form.Control
-                type="text"
-                value={newJob.jobName}
-                onChange={(e) => setNewJob({...newJob, jobName: e.target.value})}
-                required
-              />
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>Description</Form.Label>
-              <Form.Control
-                as="textarea"
-                rows={3}
-                value={newJob.jobDescription}
-                onChange={(e) => setNewJob({...newJob, jobDescription: e.target.value})}
-              />
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>Status</Form.Label>
-              <Form.Select
-                value={newJob.jobStatus}
-                onChange={(e) => setNewJob({...newJob, jobStatus: e.target.value})}
-              >
-                <option value="Pending">Pending</option>
-                <option value="In Progress">In Progress</option>
-                <option value="Completed">Completed</option>
-              </Form.Select>
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>Cost</Form.Label>
-              <Form.Control
-                type="number"
-                min="0"
-                step="0.01"
-                value={newJob.jobCost}
-                onChange={(e) => setNewJob({...newJob, jobCost: parseFloat(e.target.value) || 0})}
-              />
-            </Form.Group>
-          </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowAddJobModal(false)}>
-            Cancel
-          </Button>
-          <Button 
-            variant="primary" 
-            onClick={handleAddJob} 
-            disabled={updating || !newJob.jobName}
-          >
-            {updating ? <Spinner size="sm" /> : "Add Job"}
-          </Button>
-        </Modal.Footer>
-      </Modal> */}
     </div>
   );
 };
@@ -438,28 +243,9 @@ const JobRow = ({ job, index, onUpdate, onRemove, updating }) => {
     <tr>
       <td>
         {editedJob.jobName}
-        {/* {editing ? (
-          <Form.Control
-            type="text"
-            value={editedJob.jobName}
-            onChange={(e) => setEditedJob({...editedJob, jobName: e.target.value})}
-          />
-        ) : (
-          job.jobName
-        )} */}
       </td>
       <td>
         {editedJob.jobDescription}
-        {/* {editing ? (
-          <Form.Control
-            as="textarea"
-            rows={2}
-            value={editedJob.jobDescription}
-            onChange={(e) => setEditedJob({...editedJob, jobDescription: e.target.value})}
-          />
-        ) : (
-          job.jobDescription || "N/A"
-        )} */}
       </td>
       <td>
         {editing ? (
@@ -483,17 +269,6 @@ const JobRow = ({ job, index, onUpdate, onRemove, updating }) => {
       </td>
       <td>
         {editedJob.jobCost}
-        {/* {editing ? (
-          <Form.Control
-            type="number"
-            min="0"
-            step="0.01"
-            value={editedJob.jobCost}
-            onChange={(e) => setEditedJob({...editedJob, jobCost: parseFloat(e.target.value) || 0})}
-          />
-        ) : (
-          `$${job.jobCost.toFixed(2)}`
-        )} */}
       </td>
       <td>
         <div className="d-flex gap-2">
@@ -511,14 +286,6 @@ const JobRow = ({ job, index, onUpdate, onRemove, updating }) => {
               <Button variant="info" size="sm" onClick={() => setEditing(true)}>
                 Update
               </Button>
-              {/* <Button 
-                variant="danger" 
-                size="sm" 
-                onClick={() => onRemove(index)}
-                disabled={updating}
-              >
-                Remove
-              </Button> */}
             </>
           )}
         </div>

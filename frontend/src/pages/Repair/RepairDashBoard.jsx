@@ -1,10 +1,10 @@
 import React from "react";
 import { Routes, Route, Link } from "react-router-dom";
 import RepairRequestForm from "../../Components/Repair/RepairRequestFrom.jsx"; // Import your components
-import JobCardCreate from '../../Components/Repair/JobCardCreate';
+import JobCardCreate from '../../components/Repair/JobCardCreate.jsx';
 import JobCardUpdateDelete from '../../Components/Repair/JobCardUpdateDelete.jsx';
-import JobCardUpdateMechnic from '../../Components/Repair/JobCardUpdateMechnic.jsx';
-import JobCardListForMechnic from '../../Components/Repair/JobCardListForMechnic.jsx';
+import JobCardUpdateMechnic from '../../components/Repair/JobCardUpdateMechnic.jsx';
+import JobCardListForMechnic from '../../components/Repair/JobCardListForMechnic.jsx';
 import RepairRequestFromUpdate from "../../Components/Repair/RepairRequestFromUpdate.jsx";
 // import JobCardCreate from "./JobCardCreate";
 import RepairRequestList from "../../Components/Repair/RepairRequestList.jsx";
