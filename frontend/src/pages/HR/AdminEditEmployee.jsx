@@ -91,6 +91,7 @@ export default function AdminEditEmployee() {
   }
 
   return (
+    <div className="flex justify-center items-center min-h-screen bg-white">
     <div>
       <h1 className="text-3xl font-bold text-center text-gray-800 uppercase tracking-wide relative mb-6">Update Employee</h1>
   
@@ -192,6 +193,7 @@ export default function AdminEditEmployee() {
           Cancel
         </button>
       </div>
+    </div>
     </div>
   );
   

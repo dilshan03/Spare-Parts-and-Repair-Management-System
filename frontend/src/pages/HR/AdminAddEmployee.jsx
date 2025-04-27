@@ -116,6 +116,7 @@ export default function AdminAddEmployee() {
   }
 
   return (
+    <div className="flex justify-center items-center min-h-screen bg-white">
     <div>
       <h1 className="text-3xl font-bold text-center text-gray-800 uppercase tracking-wide relative mb-6">
         Add Employee
@@ -175,6 +176,7 @@ export default function AdminAddEmployee() {
           Cancel
         </button>
       </div>
+    </div>
     </div>
   );
 }
