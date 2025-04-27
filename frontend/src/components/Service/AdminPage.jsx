@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import jsPDF from "jspdf";
 
 const AdminPage = () => {
   const [appointments, setAppointments] = useState([]);
@@ -13,21 +14,7 @@ const AdminPage = () => {
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
-        const token = localStorage.getItem("token");
-          // Check if token exists
-          if (!token) {
-            showNotification("Authentication required", "error");
-            return; // Exit early if token is missing
-          }
-
-        const response = await axios.get(
-          "http://localhost:5000/api/appointments",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await axios.get("http://localhost:5000/api/appointments");
         setAppointments(response.data);
         setFilteredAppointments(response.data);
       } catch (error) {
@@ -37,11 +24,9 @@ const AdminPage = () => {
         setIsLoading(false);
       }
     };
-  
+
     fetchAppointments();
   }, []);
-  
-
 
   const showNotification = (message, type) => {
     setNotification({ message, type });
@@ -52,13 +37,7 @@ const AdminPage = () => {
     if (!window.confirm("Are you sure you want to delete this appointment?")) return;
     
     try {
-      const token = localStorage.getItem("token");
-      await axios.delete(`http://localhost:5000/api/appointments/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      
+      await axios.delete(`http://localhost:5000/api/appointments/${id}`);
       const updatedList = appointments.filter(app => app._id !== id);
       setAppointments(updatedList);
       setFilteredAppointments(updatedList);
@@ -96,15 +75,9 @@ const AdminPage = () => {
 
   const handleSaveClick = async (id) => {
     try {
-      const token = localStorage.getItem("token");
       const response = await axios.put(
         `http://localhost:5000/api/appointments/${id}`,
-        editData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        editData
       );
       const updatedAppointments = appointments.map((app) =>
         app._id === id ? response.data : app
@@ -119,10 +92,78 @@ const AdminPage = () => {
       showNotification("Failed to update appointment", "error");
     }
   };
-  
 
   const handleChange = (e) => {
     setEditData({ ...editData, [e.target.name]: e.target.value });
+  };
+
+  const handleGenerateReport = async () => {
+    try {
+      const token = localStorage.getItem('token');
+  
+      const response = await axios.get("http://localhost:5000/api/appointments/report",{
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const report = response.data;
+
+      // Create PDF document
+      const doc = new jsPDF();
+      const lineHeight = 10;
+      let y = 20;
+
+      // Add title
+      doc.setFontSize(16);
+      doc.text('Service Requests Report', 20, y);
+      y += lineHeight * 2;
+
+      // Add generation time and total appointments
+      doc.setFontSize(12);
+      doc.text(`Generated at: ${new Date(report.generatedAt).toLocaleString()}`, 20, y);
+      y += lineHeight;
+      doc.text(`Total Appointments: ${report.totalAppointments}`, 20, y);
+      y += lineHeight * 2;
+
+      // Add appointments
+      doc.setFontSize(12);
+      report.appointments.forEach(app => {
+        // Check if we need a new page
+        if (y > 270) { // Leave margin at bottom
+          doc.addPage();
+          y = 20;
+        }
+
+        doc.setFont(undefined, 'bold');
+        doc.text('Customer Details:', 20, y);
+        y += lineHeight;
+
+        doc.setFont(undefined, 'normal');
+        doc.text(`Name: ${app.name}`, 30, y);
+        y += lineHeight;
+        doc.text(`Email: ${app.email}`, 30, y);
+        y += lineHeight;
+        doc.text(`Service Type: ${app.serviceType}`, 30, y);
+        y += lineHeight;
+        doc.text(`Date: ${new Date(app.date).toLocaleDateString()}`, 30, y);
+        y += lineHeight;
+        doc.text(`Time: ${app.timeSlot}`, 30, y);
+        y += lineHeight;
+        if (app.status) {
+          doc.text(`Status: ${app.status}`, 30, y);
+          y += lineHeight;
+        }
+        y += lineHeight; // Add space between appointments
+      });
+
+      // Save the PDF
+      doc.save(`service-report-${new Date().toISOString().split('T')[0]}.pdf`);
+      
+      showNotification("Report generated successfully", "success");
+    } catch (error) {
+      console.error("Error generating report:", error);
+      showNotification("Failed to generate report", "error");
+    }
   };
 
   return (
@@ -151,7 +192,13 @@ const AdminPage = () => {
               Manage and track all customer appointments
             </p>
           </div>
-          <div className="mt-4 md:mt-0">
+          <div className="mt-4 md:mt-0 flex space-x-4">
+            <button
+              onClick={handleGenerateReport}
+              className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            >
+              Generate Report
+            </button>
             <span className="inline-flex items-center px-3 py-1 rounded-full bg-blue-100 text-blue-800 text-sm font-medium">
               {appointments.length} Total Appointments
             </span>

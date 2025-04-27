@@ -98,4 +98,28 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
+// Generate Report
+router.get("/report", async (req, res) => {
+  try {
+    const appointments = await Appointment.find().sort({ date: 1 });
+    const report = {
+      generatedAt: new Date(),
+      totalAppointments: appointments.length,
+      appointments: appointments.map(app => ({
+        name: app.name,
+        email: app.email,
+        serviceType: app.serviceType,
+        date: app.date,
+        timeSlot: app.timeSlot,
+        status: app.status
+      }))
+    };
+    res.json(report);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+
+
 export default router;
