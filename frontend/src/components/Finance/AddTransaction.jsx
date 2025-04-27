@@ -204,10 +204,9 @@ const AddTransaction = () => {
         };
       
         try {
-            const token = localStorage.getItem("token");
           const response = await axios.post('http://localhost:5000/api/finance/add', payload,{
             headers: {
-                Authorization: `Bearer ${token}`
+                Authorization: `Bearer ${localStorage.getItem("token")}`
             }
           });
           if (response.status === 201) {
@@ -226,10 +225,9 @@ const AddTransaction = () => {
     // Handle transaction deletion
     const handleDelete = async (transactionId) => {
         try {
-            const token = localStorage.getItem("token");
             await axios.delete(`http://localhost:5000/api/finance/delete/${transactionId}`,{
                 headers: {
-                    Authorization: `Bearer ${token}`
+                    Authorization: `Bearer ${localStorage.getItem("token")}`
                 }
             });
             setTransactions(transactions.filter(txn => txn._id !== transactionId));
@@ -260,14 +258,12 @@ const AddTransaction = () => {
     // Export as PDF
     const exportToPDF = async () => {
     try {
-        const token = localStorage.getItem("token");
-        const response = await axios.get('http://localhost:5000/api/finance/reports/pdf', 
-            { responseType: 'blob',
-            headers: {
-                Authorization: `Bearer ${token}`,
-                Accept: 'application/pdf',
-            },
-             });
+        const response = await axios.get('http://localhost:5000/api/finance/reports/pdf',
+             { responseType: 'blob',
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("token")}`
+                }
+              });
 
         const blob = new Blob([response.data], { type: 'application/pdf' });
         const link = document.createElement('a');
