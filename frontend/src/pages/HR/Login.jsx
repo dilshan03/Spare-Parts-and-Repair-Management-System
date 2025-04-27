@@ -40,7 +40,7 @@ export default function Login() {
             setError(serverMessage);
             toast.error(serverMessage);
         
-            // 🔁 If the password is incorrect and we got the email, offer reset option
+            //  If the password is incorrect and we got the email, offer reset option
             if (serverMessage === "Incorrect password" && userEmail) {
                 if (confirm("Incorrect password. Do you want to reset your password?")) {
                     navigate("/api/reset-password", { state: { email: userEmail } });
@@ -54,7 +54,7 @@ export default function Login() {
             <div className="bg-white p-8 shadow-lg rounded-lg max-w-sm w-full">
                 <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">Login</h2>
 
-                {/* ✅ Display error message */}
+                {/* Display error message */}
                 {error && <p className="text-red-500 text-sm text-center mb-4">{error}</p>}
 
                 <form onSubmit={handleSubmit}>
