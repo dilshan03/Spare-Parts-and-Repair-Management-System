@@ -5,13 +5,13 @@ const router = express.Router();
 
 router.post('/', async (req, res) => {
     try {
-        const { name, email, phoneNumber, bank, vehicleType, preferredBrand, budget } = req.body;
+        const { name, email, phoneNumber, bank } = req.body;
         
         // Check required fields
-        if (!name || !email || !phoneNumber || !bank || !vehicleType || !preferredBrand || !budget) {
+        if (!name || !email || !phoneNumber || !bank) {
             return res.status(400).json({ 
                 message: 'Missing required fields',
-                required: ['name', 'email', 'phoneNumber', 'bank', 'vehicleType', 'preferredBrand', 'budget'],
+                required: ['name', 'email', 'phoneNumber', 'bank'],
                 received: req.body
             });
         }

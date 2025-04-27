@@ -3,9 +3,6 @@ import api from '../../api/axios.js';
 
 const CustomerRequestForm = ({ onClose, vehicle }) => {
     const [formData, setFormData] = useState({
-        vehicleType: vehicle?.type || '',
-        preferredBrand: vehicle?.brand || '',
-        budget: '',
         name: '',
         email: '',
         phoneNumber: '',
@@ -16,8 +13,6 @@ const CustomerRequestForm = ({ onClose, vehicle }) => {
     const [errors, setErrors] = useState({});
 
     const banks = ['HNB', 'Sampath Bank', 'Commercial Bank', 'Peoples Bank'];
-    const vehicleTypes = ['Car', 'SUV', 'Van', 'Truck'];
-    const carBrands = ['Toyota', 'Honda', 'Nissan', 'BMW', 'Mercedes-Benz', 'Audi'];
 
     const validateForm = () => {
         const newErrors = {};
@@ -25,9 +20,6 @@ const CustomerRequestForm = ({ onClose, vehicle }) => {
         if (!formData.email) newErrors.email = 'Email is required';
         if (!formData.phoneNumber) newErrors.phoneNumber = 'Phone number is required';
         if (!formData.bank) newErrors.bank = 'Bank is required';
-        if (!formData.vehicleType) newErrors.vehicleType = 'Vehicle type is required';
-        if (!formData.preferredBrand) newErrors.preferredBrand = 'Preferred brand is required';
-        if (!formData.budget) newErrors.budget = 'Budget is required';
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
@@ -42,11 +34,7 @@ const CustomerRequestForm = ({ onClose, vehicle }) => {
         }
 
         try {
-            // Convert budget to number and prepare request data
-            const requestData = {
-                ...formData,
-                budget: Number(formData.budget)
-            };
+            const requestData = { ...formData };
             
             // Remove vehicle field if it's undefined
             if (!requestData.vehicle) {
@@ -85,68 +73,6 @@ const CustomerRequestForm = ({ onClose, vehicle }) => {
         <div className="max-w-md mx-auto mt-8 p-6 bg-white rounded-lg shadow-lg">
             <h2 className="text-2xl font-bold mb-6">Request Vehicle Import</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                    <label className="block text-sm font-medium text-gray-700">Vehicle Type</label>
-                    <select
-                        name="vehicleType"
-                        value={formData.vehicleType}
-                        onChange={handleChange}
-                        required
-                        className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 ${
-                            errors.vehicleType ? 'border-red-500' : ''
-                        }`}
-                    >
-                        <option value="">Select vehicle type</option>
-                        {vehicleTypes.map((type) => (
-                            <option key={type} value={type}>{type}</option>
-                        ))}
-                    </select>
-                    {errors.vehicleType && (
-                        <p className="mt-1 text-sm text-red-500">{errors.vehicleType}</p>
-                    )}
-                </div>
-
-                <div>
-                    <label className="block text-sm font-medium text-gray-700">Preferred Brand</label>
-                    <select
-                        name="preferredBrand"
-                        value={formData.preferredBrand}
-                        onChange={handleChange}
-                        required
-                        className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 ${
-                            errors.preferredBrand ? 'border-red-500' : ''
-                        }`}
-                    >
-                        <option value="">Select preferred brand</option>
-                        {carBrands.map((brand) => (
-                            <option key={brand} value={brand}>{brand}</option>
-                        ))}
-                    </select>
-                    {errors.preferredBrand && (
-                        <p className="mt-1 text-sm text-red-500">{errors.preferredBrand}</p>
-                    )}
-                </div>
-
-                <div>
-                    <label className="block text-sm font-medium text-gray-700">Budget (LKR)</label>
-                    <input
-                        type="number"
-                        name="budget"
-                        value={formData.budget}
-                        onChange={handleChange}
-                        required
-                        min="0"
-                        step="1000"
-                        placeholder="Enter your budget in LKR"
-                        className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 ${
-                            errors.budget ? 'border-red-500' : ''
-                        }`}
-                    />
-                    {errors.budget && (
-                        <p className="mt-1 text-sm text-red-500">{errors.budget}</p>
-                    )}
-                </div>
-
                 <div>
                     <label className="block text-sm font-medium text-gray-700">Name</label>
                     <input
@@ -209,9 +135,9 @@ const CustomerRequestForm = ({ onClose, vehicle }) => {
                             errors.bank ? 'border-red-500' : ''
                         }`}
                     >
-                        <option value="">Select a bank</option>
-                        {banks.map((b) => (
-                            <option key={b} value={b}>{b}</option>
+                        <option value="">Select bank</option>
+                        {banks.map((bank) => (
+                            <option key={bank} value={bank}>{bank}</option>
                         ))}
                     </select>
                     {errors.bank && (
@@ -219,12 +145,21 @@ const CustomerRequestForm = ({ onClose, vehicle }) => {
                     )}
                 </div>
 
-                <button
-                    type="submit"
-                    className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                >
-                    Submit Request
-                </button>
+                <div className="flex justify-end space-x-3 mt-6">
+                    <button
+                        type="button"
+                        onClick={onClose}
+                        className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        type="submit"
+                        className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                    >
+                        Submit Request
+                    </button>
+                </div>
             </form>
         </div>
     );
