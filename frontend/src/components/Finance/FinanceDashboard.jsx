@@ -93,7 +93,7 @@ const FinanceDashboard = () => {
         {/* Navigation Buttons */}
         <div className="flex flex-wrap gap-4 mb-6">
           {[
-            { label: "Dashboard", value: "dashboard", bg: "#657C6A" },
+            { label: "Dashboard", value: "dashboard" },
             { label: "Transaction Management", value: "add-transaction" },
             { label: "Bank Book Management", value: "bank-book"},
             { label: "Petty Cash Management", value: "petty-cash" },
@@ -144,6 +144,8 @@ const FinanceDashboard = () => {
                   >
                     Download Transaction History Excel
                   </button>
+
+                  
                   
                 </div>
               </>
