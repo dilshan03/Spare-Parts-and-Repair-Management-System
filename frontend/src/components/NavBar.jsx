@@ -22,7 +22,7 @@ const Navbar = () => {
           </Link>
         </li>
         <li>
-          <Link to="/catalog" className="hover:text-orange-500 transition-colors duration-300">
+          <Link to="/repairRequestFrom" className="hover:text-orange-500 transition-colors duration-300">
             Request Repair
           </Link>
         </li>

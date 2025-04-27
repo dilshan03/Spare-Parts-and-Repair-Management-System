@@ -14,9 +14,47 @@ const JobCardList = () => {
   const [repairRequests, setRepairRequests] = useState([]);
   const [repair, setRepair] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [filteredJobCards, setFilteredJobCards] = useState([]);
+  const [filters, setFilters] = useState({
+    status: '',
+    startDate: '',
+    endDate: '',
+    mechanic: ''
+  });
   const navigate = useNavigate();
 
   // Fetch all job cards and repair requests
+  // Filter job cards based on current filters
+  useEffect(() => {
+    let filtered = [...jobCards];
+    
+    if (filters.status) {
+      filtered = filtered.filter(jobCard => 
+        jobCard.jobs.some(job => job.jobStatus === filters.status)
+      );
+    }
+    
+    if (filters.startDate) {
+      filtered = filtered.filter(jobCard => 
+        new Date(jobCard.createdAt) >= new Date(filters.startDate)
+      );
+    }
+    
+    if (filters.endDate) {
+      filtered = filtered.filter(jobCard => 
+        new Date(jobCard.createdAt) <= new Date(filters.endDate)
+      );
+    }
+    
+    if (filters.mechanic) {
+      filtered = filtered.filter(jobCard => 
+        jobCard.assignedMechanic.toLowerCase().includes(filters.mechanic.toLowerCase())
+      );
+    }
+    
+    setFilteredJobCards(filtered);
+  }, [jobCards, filters]);
+
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -72,11 +110,59 @@ const JobCardList = () => {
   return (
     <div className="container mt-4">
       <h1>Job Cards</h1>
+      
+      {/* Filters */}
+      <div className="filters mb-4">
+        <div className="row g-3">
+          <div className="col-md-3">
+            <select 
+              className="form-select" 
+              value={filters.status}
+              onChange={(e) => setFilters({...filters, status: e.target.value})}
+            >
+              <option value="">Filter by Status</option>
+              <option value="Pending">Pending</option>
+              <option value="In Progress">In Progress</option>
+              <option value="Completed">Completed</option>
+            </select>
+          </div>
+          
+          <div className="col-md-3">
+            <input
+              type="date"
+              className="form-control"
+              value={filters.startDate}
+              onChange={(e) => setFilters({...filters, startDate: e.target.value})}
+              placeholder="Start Date"
+            />
+          </div>
+          
+          <div className="col-md-3">
+            <input
+              type="date"
+              className="form-control"
+              value={filters.endDate}
+              onChange={(e) => setFilters({...filters, endDate: e.target.value})}
+              placeholder="End Date"
+            />
+          </div>
+          
+          <div className="col-md-3">
+            <input
+              type="text"
+              className="form-control"
+              value={filters.mechanic}
+              onChange={(e) => setFilters({...filters, mechanic: e.target.value})}
+              placeholder="Search by Mechanic"
+            />
+          </div>
+        </div>
+      </div>
       {loading ? (
         <Spinner animation="border" role="status">
           <span className="visually-hidden">Loading...</span>
         </Spinner>
-      ) : jobCards.length === 0 ? (
+      ) : filteredJobCards.length === 0 ? (
         <p>No job cards found.</p>
       ) : (
         <Table striped bordered hover responsive>
@@ -90,7 +176,7 @@ const JobCardList = () => {
             </tr>
           </thead>
           <tbody>
-            {jobCards.map((jobCard, index) => {
+            {filteredJobCards.map((jobCard, index) => {
               console.log(`Processing Job Card #${index + 1}:`, jobCard);
               console.log("Job Card repairId:", jobCard.repairId);
               
