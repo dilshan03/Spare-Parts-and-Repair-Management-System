@@ -40,7 +40,12 @@ const CreateQuotation = () => {
     const repairsTotal = formData.repairs.reduce((sum, repair) => sum + Number(repair.price), 0);
     const total = itemsTotal + repairsTotal - Number(formData.discount);
 
-    setFormData((prevData) => ({ ...prevData, totalAmount: total }));
+    if (total < 0) {
+      alert('Total amount cannot be negative.');
+      setFormData((prevData) => ({ ...prevData, totalAmount: 0 }));
+    } else {
+      setFormData((prevData) => ({ ...prevData, totalAmount: total }));
+    }
   }, [formData.items, formData.repairs, formData.discount]);
 
   // Handle simple field input
