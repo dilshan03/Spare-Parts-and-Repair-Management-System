@@ -13,7 +13,8 @@ import RepairRequestFromRoute from "./routes/Repair/RepairRequestFromRoute.js";/
 import RepairRoute from "./routes/Repair/RepairRoutes.js"; //RY
 import jobCardRoutes from "./routes/Repair/JobCardRoutes.js";//RY
 
-import quotationRoutes from "./routes/Quotation/quotationRoutes.js";//RY
+import quotationRoutes from "./routes/Quotation/quotationRoutes.js";//Dilshan
+import appointmentRoutes from "./routes/Service/appointment.js";//Dilshan
 
 import financeRoutes from "./routes/Finance/finance.js"; //Esandi
 import balanceSheetRoutes from './routes/Finance/balanceSheetRoutes.js';//Esandi
@@ -22,9 +23,7 @@ import profitLossRoutes from './routes/Finance/profitLossRoutes.js'; //Esandi
 import pettyCashRoutes from './routes/Finance/pettyCashRoutes.js'; //Esandi
 import paymentRoutes from './routes/Finance/paymentRoutes.js'; //Esandi
 import bankAccountRoutes from './routes/Finance/bankAccountRoutes.js'; //Esandi
-
-
-//import pdfRoutes from "./routes/pdfRoutes.js";
+import pdfRoutes from "./routes/Finance/pdfRoutes.js";
 
 
 
@@ -53,13 +52,6 @@ app.options("*", cors(corsOptions));
 app.use(bodyParser.json({ limit: "100mb" }));  // Increase JSON limit to 50MB //RY
 app.use(bodyParser.urlencoded({ limit: "100mb", extended: true }));  // Increase form-data limit //RY
 
-// Mount routes with /api prefix
-// app.use("/api/employees", userRoute);
-// app.use("/api/leaves", leaveRouter);
-// app.use("/api/salary", salaryRouter);
-// app.use("/api/repairs", RepairRoute);
-// app.use("/api/repairRequest", RepairRequestFromRoute);
-// app.use("/api/jobCards", jobCardRoutes);
 
 
 app.use((req,res,next)=>{
@@ -68,7 +60,8 @@ app.use((req,res,next)=>{
         "/api/employees/login",
         "/api/employees/request-otp",
         "/api/employees/verify-otp",
-        "/api/employees/reset-password"
+        "/api/employees/reset-password",
+        "/api/appointments"
     ];
     
     // Check if the request URL matches any public route
@@ -126,6 +119,7 @@ app.use("/api/repairs", RepairRoute); //RY
 app.use("/api/jobCards", jobCardRoutes); //RY
 
 app.use("/api/quotations", quotationRoutes); //Dilshan
+app.use("/api/appointments", appointmentRoutes); //Dilshan
 
 
 app.use('/api/payments', paymentRoutes);//Esandi
@@ -137,7 +131,7 @@ app.use('/api/pettycash', pettyCashRoutes);//Esandi
 app.use("/api/finance", financeRoutes); //Esandi
 app.use("/api", financeRoutes);;//Esandi
 app.use('/api/profit-loss', profitLossRoutes);//Esandi
-//app.use("/api/pdf", pdfRoutes);
+app.use("/api/pdf", pdfRoutes);
 
 
 app.listen(5000,()=>{

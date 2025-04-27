@@ -13,7 +13,21 @@ const AdminPage = () => {
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/appointments");
+        const token = localStorage.getItem("token");
+          // Check if token exists
+          if (!token) {
+            showNotification("Authentication required", "error");
+            return; // Exit early if token is missing
+          }
+
+        const response = await axios.get(
+          "http://localhost:5000/api/appointments",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         setAppointments(response.data);
         setFilteredAppointments(response.data);
       } catch (error) {
@@ -23,9 +37,11 @@ const AdminPage = () => {
         setIsLoading(false);
       }
     };
-
+  
     fetchAppointments();
   }, []);
+  
+
 
   const showNotification = (message, type) => {
     setNotification({ message, type });
@@ -36,7 +52,13 @@ const AdminPage = () => {
     if (!window.confirm("Are you sure you want to delete this appointment?")) return;
     
     try {
-      await axios.delete(`http://localhost:5000/api/appointments/${id}`);
+      const token = localStorage.getItem("token");
+      await axios.delete(`http://localhost:5000/api/appointments/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      
       const updatedList = appointments.filter(app => app._id !== id);
       setAppointments(updatedList);
       setFilteredAppointments(updatedList);
@@ -74,9 +96,15 @@ const AdminPage = () => {
 
   const handleSaveClick = async (id) => {
     try {
+      const token = localStorage.getItem("token");
       const response = await axios.put(
         `http://localhost:5000/api/appointments/${id}`,
-        editData
+        editData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       const updatedAppointments = appointments.map((app) =>
         app._id === id ? response.data : app
@@ -91,6 +119,7 @@ const AdminPage = () => {
       showNotification("Failed to update appointment", "error");
     }
   };
+  
 
   const handleChange = (e) => {
     setEditData({ ...editData, [e.target.name]: e.target.value });

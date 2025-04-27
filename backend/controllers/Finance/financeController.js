@@ -4,6 +4,21 @@ import path from "path";
 import excelJS from "exceljs";
 import Transaction from "../../models/Finance/Transaction.js";
 
+// ✅ Correct Date-Time format function
+const formatDateTime = (timestamp) => {
+  const date = new Date(timestamp);
+  const options = {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: true,
+  };
+  return date.toLocaleString("en-US", options);
+};
+
 // Generate PDF Report
 const generatePDFReport = async (req, res) => {
   try {
@@ -11,21 +26,38 @@ const generatePDFReport = async (req, res) => {
     const doc = new PDFDocument({ margin: 50 });
 
     res.setHeader("Content-Type", "application/pdf");
-    res.setHeader("Content-Disposition", 'attachment; filename="financial_report.pdf"');
+    res.setHeader(
+      "Content-Disposition",
+      'attachment; filename="financial_report.pdf"'
+    );
     doc.pipe(res);
 
-    // Add Logo
-    const logoPath = "images/logo.jpg"; // Adjust the path based on your project structure
-    doc.image(logoPath, 50, 50, { width: 100 });
+    // Logo
+    const logoPath = "images/logo.jpg"; // Adjust this if needed
+    if (fs.existsSync(logoPath)) {
+      doc.image(logoPath, 50, 50, { width: 100 });
+    }
 
-    // Add Letterhead
-    doc.fontSize(20).text("Cosmo Exports Lanka (PVT) LTD", 50, 120, { align: "center" });
-    doc.fontSize(12).text("496/1, Naduhena, Meegoda, Sri Lanka", { align: "center" });
-    doc.text("Phone: +94 77 086 4011  +94 11 275 2373 | Email: cosmoexportslanka@gmail.com", { align: "center" });
+    // Letterhead
+    doc
+      .fontSize(20)
+      .text("Cosmo Exports Lanka (PVT) LTD", { align: "center" });
+    doc
+      .fontSize(12)
+      .text("496/1, Naduhena, Meegoda, Sri Lanka", { align: "center" });
+    doc.text(
+      "Phone: +94 77 086 4011  +94 11 275 2373 | Email: cosmoexportslanka@gmail.com",
+      { align: "center" }
+    );
     doc.moveDown(2);
 
-    // Report Title
-    doc.fontSize(16).text("Financial Report (Transaction History)", { align: "center", underline: true });
+    // Title
+    doc
+      .fontSize(16)
+      .text("Financial Report (Transaction History)", {
+        align: "center",
+        underline: true,
+      });
     doc.moveDown(2);
 
     // Table Headers
@@ -34,34 +66,40 @@ const generatePDFReport = async (req, res) => {
 
     doc.fontSize(12).font("Helvetica-Bold");
     doc.text("Date & Time", startX, startY);
-    doc.text("Type", startX + 120, startY);
-    doc.text("Amount", startX + 220, startY);
-    doc.text("Description", startX + 320, startY);
-    doc.moveTo(startX, startY + 15).lineTo(550, startY + 15).stroke();
+    doc.text("Type", startX + 140, startY);
+    doc.text("Amount", startX + 240, startY);
+    doc.text("Description", startX + 340, startY);
+    doc
+      .moveTo(startX, startY + 15)
+      .lineTo(550, startY + 15)
+      .stroke();
 
-    // Reset font for data
     doc.font("Helvetica");
     startY += 25;
 
-    // Add Transactions with Fixed Alignment
+    // Data rows
     transactions.forEach((txn) => {
-      // Use `toLocaleString()` to include both date and time
-      doc.text(new Date(txn.timestamp).toLocaleString(), startX, startY);
-      doc.text(txn.type, startX + 120, startY);
-      doc.text(`LKR ${txn.amount}`, startX + 220, startY);
-      doc.text(txn.description, startX + 320, startY, { width: 200, ellipsis: true });
+      doc.text(formatDateTime(txn.timestamp), startX, startY);
+      doc.text(txn.type, startX + 140, startY);
+      doc.text(`LKR ${txn.amount}`, startX + 240, startY);
+      doc.text(txn.description, startX + 340, startY, {
+        width: 180,
+        ellipsis: true,
+      });
 
-      startY += 20; // Ensure consistent row height
+      startY += 20;
       if (startY > 750) {
         doc.addPage();
-        startY = 50; // Reset Y position on new page
+        startY = 50;
       }
     });
 
     doc.moveDown(4);
 
     // Signature
-    doc.text("Authorized Signature: ____________________", { align: "right" });
+    doc.text("Authorized Signature: ____________________", {
+      align: "right",
+    });
 
     doc.end();
   } catch (error) {
@@ -86,8 +124,7 @@ const generateExcelReport = async (req, res) => {
 
     transactions.forEach((txn) => {
       worksheet.addRow({
-        // Format the timestamp to include both date and time
-        timestamp: new Date(txn.timestamp).toLocaleString(),
+        timestamp: formatDateTime(txn.timestamp),
         type: txn.type,
         amount: txn.amount,
         description: txn.description,
@@ -98,7 +135,10 @@ const generateExcelReport = async (req, res) => {
       "Content-Type",
       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     );
-    res.setHeader("Content-Disposition", 'attachment; filename="financial_report.xlsx"');
+    res.setHeader(
+      "Content-Disposition",
+      'attachment; filename="financial_report.xlsx"'
+    );
     await workbook.xlsx.write(res);
     res.end();
   } catch (error) {
@@ -107,7 +147,7 @@ const generateExcelReport = async (req, res) => {
   }
 };
 
-// ✅ Define `financeController` before exporting
+// Export controller
 const financeController = {
   generatePDFReport,
   generateExcelReport,

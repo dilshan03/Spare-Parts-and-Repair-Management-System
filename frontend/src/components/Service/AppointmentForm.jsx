@@ -33,7 +33,10 @@ const AppointmentForm = () => {
 
     setIsSubmitting(true);
     try {
-      await axios.post("http://localhost:5000/api/appointments", form);
+      const token = localStorage.getItem("token");
+      await axios.post("http://localhost:5000/api/appointments", form,{
+        headers: { Authorization: `Bearer ${token}` },
+      });
       alert("Appointment booked successfully!");
       setForm({ name: "", email: "", phone: "", vehicleNumber: "", serviceType: "", date: "", timeSlot: "" });
     } catch (err) {

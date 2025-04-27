@@ -1,6 +1,6 @@
 import express from "express";
 import Transaction from "../../models/Finance/Transaction.js";
-import financeController from "../../controllers/Finance/financeController.js"; // Adjust the path as necessary
+import financeController from "../../controllers/Finance/financeController.js";
 
 
 const router = express.Router();

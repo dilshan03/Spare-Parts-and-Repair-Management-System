@@ -6,6 +6,15 @@ import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import { useNavigate } from 'react-router-dom';
 
 const CreateQuotation = () => {
+  const navigate = useNavigate();
+  const token = localStorage.getItem('token'); // 🔥 get token from localStorage
+
+  // 🔥 Get today's date in yyyy-mm-dd format
+  const getTodayDateString = () => {
+    const today = new Date();
+    return today.toISOString().split('T')[0];
+  };
+
   const [formData, setFormData] = useState({
     customerName: '',
     customerEmail: '',
@@ -14,180 +23,129 @@ const CreateQuotation = () => {
     repairs: [{ repairType: '', price: 0 }],
     discount: 0,
     totalAmount: 0,
-    quotationDate: '', // 🆕 Add this line
+    quotationDate: getTodayDateString(), // 🔥 default to today
   });
 
-  const [quotationId, setQuotationId] = useState(null); // Store the created quotation ID
-  const navigate = useNavigate(); // For navigation
+  const [quotationId, setQuotationId] = useState(null);
 
-  // Validation function for vehicle number
- const validateVehicleNumber = (value) => {
-  const vehicleNumberRegex = /^(?:[A-Za-z0-9]{2,3}-\d{4}|[A-Za-z0-9]{1,2} SRI \d{4})$/;
-  return vehicleNumberRegex.test(value);
-};
+  // Validate vehicle number format
+  const validateVehicleNumber = (value) => {
+    const vehicleNumberRegex = /^(?:[A-Za-z0-9]{2,3}-\d{4}|[A-Za-z0-9]{1,2} SRI \d{4})$/;
+    return vehicleNumberRegex.test(value);
+  };
 
-
-  // Calculate total amount whenever items, repairs, or discount changes
+  // Recalculate total amount whenever items, repairs, or discount change
   useEffect(() => {
-    const itemsTotal = formData.items.reduce((sum, item) => {
-      const quantity = Number(item.quantity);
-      const price = Number(item.price);
-      return sum + quantity * price;
-    }, 0);
-
-    const repairsTotal = formData.repairs.reduce((sum, repair) => {
-      const price = Number(repair.price);
-      return sum + price;
-    }, 0);
-
+    const itemsTotal = formData.items.reduce((sum, item) => sum + Number(item.quantity) * Number(item.price), 0);
+    const repairsTotal = formData.repairs.reduce((sum, repair) => sum + Number(repair.price), 0);
     const total = itemsTotal + repairsTotal - Number(formData.discount);
-    setFormData((prevData) => ({ ...prevData, totalAmount: total }));
+
+    if (total < 0) {
+      alert('Total amount cannot be negative.');
+      setFormData((prevData) => ({ ...prevData, totalAmount: 0 }));
+    } else {
+      setFormData((prevData) => ({ ...prevData, totalAmount: total }));
+    }
   }, [formData.items, formData.repairs, formData.discount]);
 
-  // Handle input changes for customer name, email, vehicle number, and discount
+  // Handle simple field input
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-
-    if (name === "discount" && Number(value) < 0) return; // Prevent negative discount
-
+    if (name === 'discount' && Number(value) < 0) return; // prevent negative discount
     setFormData({ ...formData, [name]: value });
   };
 
-  // Handle blur event for vehicle number validation
   const handleBlur = (e) => {
     const { name, value } = e.target;
-
-    if (name === "vehicleNumber" && value && !validateVehicleNumber(value)) {
-      alert("Invalid vehicle number format. Use format: XX-1234, XXX-1234, XX SRI 1234, or X SRI 1234");
-      setFormData((prevData) => ({ ...prevData, vehicleNumber: '' })); // Clear the field if invalid
+    if (name === 'vehicleNumber' && value && !validateVehicleNumber(value)) {
+      alert('Invalid vehicle number format. Use format: XX-1234, XXX-1234, XX SRI 1234, or X SRI 1234');
+      setFormData((prevData) => ({ ...prevData, vehicleNumber: '' }));
     }
   };
 
-  // Handle changes for items
+  // Handle changes for items array
   const handleItemChange = (index, e) => {
     const { name, value } = e.target;
-    const numValue = Number(value);
-
-    if (name === 'itemName') {
-      const newItems = [...formData.items];
-      newItems[index][name] = value; // Handle item name as string
-      setFormData({ ...formData, items: newItems });
-    } else if (numValue >= 0) {
-      const newItems = [...formData.items];
-      newItems[index][name] = numValue;
-      setFormData({ ...formData, items: newItems });
-    }
+    const updatedItems = [...formData.items];
+    updatedItems[index][name] = name === 'itemName' ? value : Number(value);
+    setFormData({ ...formData, items: updatedItems });
   };
 
-  // Handle changes for repairs
+  const addItem = () => {
+    setFormData({ ...formData, items: [...formData.items, { itemName: '', quantity: 0, price: 0 }] });
+  };
+
+  const removeItem = (index) => {
+    const updatedItems = formData.items.filter((_, i) => i !== index);
+    setFormData({ ...formData, items: updatedItems });
+  };
+
+  // Handle changes for repairs array
   const handleRepairChange = (index, e) => {
     const { name, value } = e.target;
-    const numValue = Number(value);
-
-    if (name === 'repairType') {
-      const newRepairs = [...formData.repairs];
-      newRepairs[index][name] = value; // Handle repair type as string
-      setFormData({ ...formData, repairs: newRepairs });
-    } else if (numValue >= 0) {
-      const newRepairs = [...formData.repairs];
-      newRepairs[index][name] = numValue;
-      setFormData({ ...formData, repairs: newRepairs });
-    }
+    const updatedRepairs = [...formData.repairs];
+    updatedRepairs[index][name] = name === 'repairType' ? value : Number(value);
+    setFormData({ ...formData, repairs: updatedRepairs });
   };
 
-  // Add a new item field
-  const addItem = () => {
-    setFormData({
-      ...formData,
-      items: [...formData.items, { itemName: '', quantity: 0, price: 0 }],
-    });
-  };
-
-  // Remove an item field
-  const removeItem = (index) => {
-    const newItems = formData.items.filter((_, i) => i !== index);
-    setFormData({ ...formData, items: newItems });
-  };
-
-  // Add a new repair field
   const addRepair = () => {
-    setFormData({
-      ...formData,
-      repairs: [...formData.repairs, { repairType: '', price: 0 }],
-    });
+    setFormData({ ...formData, repairs: [...formData.repairs, { repairType: '', price: 0 }] });
   };
 
-  // Remove a repair field
   const removeRepair = (index) => {
-    const newRepairs = formData.repairs.filter((_, i) => i !== index);
-    setFormData({ ...formData, repairs: newRepairs });
+    const updatedRepairs = formData.repairs.filter((_, i) => i !== index);
+    setFormData({ ...formData, repairs: updatedRepairs });
   };
 
-  // Handle form submission
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   try {
-  //     const token = localStorage.getItem("token");//RY
-  //     const response = await axios.post('http://localhost:5000/api/quotations', formData);
-  //     setQuotationId(response.data._id); // Store the quotation ID
-  //     alert('Quotation created successfully');
-  //   } catch (err) {
-  //     console.error('Error creating quotation:', err.response?.data || err.message);
-  //     alert('Error creating quotation: ' + (err.response?.data?.error || err.message));
-  //   }
-  // };
-
+  // 🔥 Submit form with Today's Date Validation
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!token) {
+      alert('Unauthorized! Please login.');
+      navigate('/login');
+      return;
+    }
+
+    // Validate: quotationDate must be today's date
+    const today = new Date();
+    const enteredDate = new Date(formData.quotationDate);
+    today.setHours(0, 0, 0, 0);
+    enteredDate.setHours(0, 0, 0, 0);
+
+    if (enteredDate.getTime() !== today.getTime()) {
+      alert('Quotation date must be today\'s date.');
+      return;
+    }
+
     try {
-      const token = localStorage.getItem("token"); // RY
-      const response = await axios.post(
-        'http://localhost:5000/api/quotations',
-        formData, // <-- Data object (quotation details)
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // Add Bearer token header
-            "Content-Type": "application/json"
-          }
-        }
-      );
-      setQuotationId(response.data._id); // Store the quotation ID
+      const response = await axios.post('http://localhost:5000/api/quotations', formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setQuotationId(response.data._id);
       alert('Quotation created successfully');
-      navigate('/quotations'); // Redirect to quotations page or another route
     } catch (err) {
       console.error('Error creating quotation:', err.response?.data || err.message);
       alert('Error creating quotation: ' + (err.response?.data?.error || err.message));
     }
   };
-  
-  
 
-  // Send quotation email
+  // Send quotation via email
   const sendEmail = async () => {
     if (!quotationId) {
       alert('No quotation created yet');
       return;
     }
     try {
-      // const token = localStorage.getItem("token");//RY
-      // await axios.post(`http://localhost:5000/api/quotations/send-email/${quotationId}`, {//RT
-      //   headers: { Authorization: `Bearer ${token}` }
-      // })//RY
-      // alert('Email sent successfully');
-      const token = localStorage.getItem("token"); // RY
-
-      await axios.post(
-        `http://localhost:5000/api/quotations/send-email/${quotationId}`, // RT
-        {}, // 🛑 Second parameter = data object (empty {} if no data to send)
-        {
-          headers: { Authorization: `Bearer ${token}` }
-        }
-      ); // RY
-
+      await axios.post(`http://localhost:5000/api/quotations/send-email/${quotationId}`, {}, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       alert('Email sent successfully');
 
-
-      // Reset the form only after the email is sent
+      // Reset form after email
       setFormData({
         customerName: '',
         customerEmail: '',
@@ -196,9 +154,8 @@ const CreateQuotation = () => {
         repairs: [{ repairType: '', price: 0 }],
         discount: 0,
         totalAmount: 0,
+        quotationDate: getTodayDateString(),
       });
-
-      // Reset quotation ID after email is sent
       setQuotationId(null);
     } catch (err) {
       console.error('Error sending email:', err.response?.data || err.message);
@@ -211,6 +168,7 @@ const CreateQuotation = () => {
       <Typography variant="h4" gutterBottom>
         Create Quotation
       </Typography>
+
       <Grid container spacing={2}>
         {/* Customer Name */}
         <Grid item xs={12}>
@@ -244,14 +202,14 @@ const CreateQuotation = () => {
             name="vehicleNumber"
             value={formData.vehicleNumber}
             onChange={handleInputChange}
-            onBlur={handleBlur} // Add onBlur for validation
+            onBlur={handleBlur}
             fullWidth
             required
           />
         </Grid>
 
-         {/* Quotation Date */}
-         <Grid item xs={12}>
+        {/* Quotation Date (auto-filled + disabled) */}
+        <Grid item xs={12}>
           <TextField
             label="Quotation Date"
             name="quotationDate"
@@ -261,6 +219,7 @@ const CreateQuotation = () => {
             fullWidth
             required
             InputLabelProps={{ shrink: true }}
+            disabled // 🔥 Prevent user from changing it
           />
         </Grid>
 
@@ -373,21 +332,21 @@ const CreateQuotation = () => {
           />
         </Grid>
 
-        {/* Total Amount */}
+        {/* Total */}
         <Grid item xs={12}>
           <Typography variant="h6">
             Total Amount: LKR {formData.totalAmount.toFixed(2)}
           </Typography>
         </Grid>
 
-        {/* Submit Button */}
+        {/* Submit */}
         <Grid item xs={12}>
           <Button type="submit" variant="contained" color="primary">
             Create Quotation
           </Button>
         </Grid>
 
-        {/* Send Email Button */}
+        {/* Send Email */}
         {quotationId && (
           <Grid item xs={12}>
             <Button
@@ -400,7 +359,7 @@ const CreateQuotation = () => {
           </Grid>
         )}
 
-        {/* View Quotation History Button */}
+        {/* View Quotations */}
         <Grid item xs={12}>
           <Button
             variant="contained"
