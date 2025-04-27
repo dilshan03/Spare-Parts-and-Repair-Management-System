@@ -59,27 +59,29 @@ function App() {
         <Route path="/repairRequestFrom" element={<RepairRequestFrom />} />
 
         <Route path="/import" element={<ImportDashboard />}>
-        <Route
-          index
-          element={
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Admin Panel Section */}
-              <div className="bg-white rounded-lg shadow-lg p-6 overflow-auto">
-                <h2 className="text-2xl font-bold mb-4">Admin Panel</h2>
-                <AdminPanel1 />
-              </div>
+          <Route
+            index
+            element={
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Admin Panel Section */}
+                <div className="bg-white rounded-lg shadow-lg p-6 overflow-auto">
+                  <h2 className="text-2xl font-bold mb-4">Admin Panel</h2>
+                  <AdminPanel1 />
+                </div>
 
-              {/* Customer Requests Section */}
-              <div className="bg-white rounded-lg shadow-lg p-6 overflow-auto">
-                <h2 className="text-2xl font-bold mb-4">Customer Requests</h2>
-                <CustomerRequests />
+                {/* Customer Requests Section */}
+                <div className="bg-white rounded-lg shadow-lg p-6 overflow-auto">
+                  <h2 className="text-2xl font-bold mb-4">Customer Requests</h2>
+                  <CustomerRequests />
+                </div>
               </div>
-            </div>
-          }
-        />
-        <Route path="vehicles" element={<AvailableModels />} />
-        <Route path="requests" element={<CustomerRequests />} />
-      </Route>
+            }
+          />
+          <Route path="requests" element={<CustomerRequests />} />
+        </Route>
+        
+        {/* Separate route for AvailableModels outside of ImportDashboard */}
+        <Route path="/import/vehicles" element={<AvailableModels />} />
 
       </Routes>
       <Footer />
