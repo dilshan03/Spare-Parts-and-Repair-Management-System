@@ -12,7 +12,14 @@ import { saveAs } from 'file-saver';
 
 const AddTransaction = () => {
     const [transactions, setTransactions] = useState([]);
+    const [filteredTransactions, setFilteredTransactions] = useState([]);
     const [errorMessage, setErrorMessage] = useState('');
+    const [searchFilters, setSearchFilters] = useState({
+        startDate: null,
+        endDate: null,
+        type: '',
+        description: ''
+    });
     const [formData, setFormData] = useState({
         type: 'income',
         description: '',
@@ -32,16 +39,98 @@ const AddTransaction = () => {
         try {
             const token = localStorage.getItem("token");
             const response = await axios.get('http://localhost:5000/api/finance',{
-                headers: { Authorization: `Bearer ${token}` },
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
             });
             setTransactions(response.data);
+            setFilteredTransactions(response.data);
         } catch (error) {
             console.error('Error fetching transactions:', error);
         }
     };
 
+    // Handle filter changes
+    const handleFilterChange = (e) => {
+        const { name, value } = e.target;
+        setSearchFilters(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
+    // Handle date filter changes
+    const handleDateFilterChange = (date, field) => {
+        setSearchFilters(prev => ({
+            ...prev,
+            [field]: date
+        }));
+    };
+
+    // Apply filters and sort
+    const applyFilters = () => {
+        let filtered = [...transactions];
+
+        // Filter by date range
+        if (searchFilters.startDate) {
+            filtered = filtered.filter(txn => 
+                new Date(txn.timestamp) >= new Date(searchFilters.startDate)
+            );
+        }
+        if (searchFilters.endDate) {
+            const endDate = new Date(searchFilters.endDate);
+            endDate.setHours(23, 59, 59, 999);
+            filtered = filtered.filter(txn => 
+                new Date(txn.timestamp) <= endDate
+            );
+        }
+
+        // Filter by type
+        if (searchFilters.type) {
+            filtered = filtered.filter(txn =>
+                txn.type.toLowerCase().includes(searchFilters.type.toLowerCase())
+            );
+        }
+
+        // Filter by description
+        if (searchFilters.description) {
+            filtered = filtered.filter(txn =>
+                txn.description.toLowerCase().includes(searchFilters.description.toLowerCase())
+            );
+        }
+
+        // Sort by date in ascending order
+        filtered.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+
+        setFilteredTransactions(filtered);
+    };
+
+    // Reset filters
+    const resetFilters = () => {
+        setSearchFilters({
+            startDate: null,
+            endDate: null,
+            type: '',
+            description: ''
+        });
+        setFilteredTransactions(transactions);
+    };
+
+    // Effect to apply filters when filters change
+    useEffect(() => {
+        applyFilters();
+    }, [searchFilters, transactions]);
+
     // Handle form input changes
     const handleChange = (e) => {
+        if (e.target.name === 'amount') {
+            const value = parseFloat(e.target.value);
+            if (value < 0) {
+                setErrorMessage('Amount cannot be negative');
+                return;
+            }
+            setErrorMessage('');
+        }
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
@@ -67,25 +156,64 @@ const AddTransaction = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (errorMessage) return;
+
+        // Validate all required fields
+        const requiredFields = ['type', 'amount', 'date'];
+        const emptyFields = requiredFields.filter(field => !formData[field]);
+        
+        // Check if description is required
+        if (formData.type === 'other' && !formData.specificDescription) {
+            emptyFields.push('specificDescription');
+        } else if (formData.type !== 'other' && !formData.description) {
+            emptyFields.push('description');
+        }
+
+        if (emptyFields.length > 0) {
+            setErrorMessage(`Please fill in all required fields: ${emptyFields.join(', ')}`);
+            return;
+        }
       
+        // Handle timestamp creation
+        let timestamp;
+        if (!formData.date) {
+            timestamp = new Date().toISOString();
+        } else {
+            const selectedDate = new Date(formData.date);
+            const today = new Date();
+            
+            // Check if selected date is today
+            const isToday = selectedDate.getDate() === today.getDate() &&
+                           selectedDate.getMonth() === today.getMonth() &&
+                           selectedDate.getFullYear() === today.getFullYear();
+
+            if (isToday) {
+                timestamp = new Date().toISOString(); // Use current time for today
+            } else {
+                // Set time to midnight (12 AM) for other dates
+                selectedDate.setHours(0, 0, 0, 0);
+                timestamp = selectedDate.toISOString();
+            }
+        }
+
         const payload = {
           type: formData.type,
-          description: formData.description,
+          description: formData.type === 'other' ? formData.specificDescription : formData.description,
           amount: parseFloat(formData.amount),
-          timestamp: formData.date ? new Date(formData.date).toISOString() : new Date().toISOString(),
+          timestamp: timestamp,
           approved: false
         };
       
         try {
-            const token = localStorage.getItem("token");  
+            const token = localStorage.getItem("token");
           const response = await axios.post('http://localhost:5000/api/finance/add', payload,{
             headers: {
-                'Authorization': `Bearer ${token}` // Add the token to the headers
-              }
+                Authorization: `Bearer ${token}`
+            }
           });
           if (response.status === 201) {
+            setErrorMessage('');
             alert('Transaction added successfully!');
-            setFormData({ type: 'income', description: '', amount: '', date: '', specificDescription: '' });
+            setFormData({ type: 'income', description: '', amount: '', date: null, specificDescription: '' });
             fetchTransactions();
           }
         } catch (error) {
@@ -99,15 +227,10 @@ const AddTransaction = () => {
     const handleDelete = async (transactionId) => {
         try {
             const token = localStorage.getItem("token");
-
-            // Check if the token exists
-            if (!token) {
-                alert('Please log in to proceed.');
-                return;
-            }
-
             await axios.delete(`http://localhost:5000/api/finance/delete/${transactionId}`,{
-                headers: { Authorization: `Bearer ${token}` },
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
             });
             setTransactions(transactions.filter(txn => txn._id !== transactionId));
             alert('Transaction deleted successfully!');
@@ -138,10 +261,13 @@ const AddTransaction = () => {
     const exportToPDF = async () => {
     try {
         const token = localStorage.getItem("token");
-        const response = await axios.get('http://localhost:5000/api/finance/reports/pdf', { responseType: 'blob',
-            headers: { Authorization: `Bearer ${token}`,
-        }
-         });
+        const response = await axios.get('http://localhost:5000/api/finance/reports/pdf', 
+            { responseType: 'blob',
+            headers: {
+                Authorization: `Bearer ${token}`,
+                Accept: 'application/pdf',
+            },
+             });
 
         const blob = new Blob([response.data], { type: 'application/pdf' });
         const link = document.createElement('a');
@@ -232,6 +358,8 @@ const AddTransaction = () => {
                     placeholder="Amount (LKR)"
                     value={formData.amount}
                     onChange={handleChange}
+                    min="0"
+                    step="0.01"
                     required
                     className="w-full p-3 border rounded-md shadow-sm"
                 />
@@ -270,9 +398,70 @@ const AddTransaction = () => {
                 </button>
             </form>
 
+            {/* Search and Filter Section */}
+            <div className="mt-8 mb-4 p-4 border rounded-lg bg-gray-50">
+                <h3 className="text-lg font-bold mb-4">Search & Filter Transactions</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Start Date</label>
+                        <DatePicker
+                            selected={searchFilters.startDate}
+                            onChange={(date) => handleDateFilterChange(date, 'startDate')}
+                            className="w-full p-2 border rounded-md"
+                            placeholderText="Select start date"
+                            maxDate={searchFilters.endDate || new Date()}
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">End Date</label>
+                        <DatePicker
+                            selected={searchFilters.endDate}
+                            onChange={(date) => handleDateFilterChange(date, 'endDate')}
+                            className="w-full p-2 border rounded-md"
+                            placeholderText="Select end date"
+                            minDate={searchFilters.startDate}
+                            maxDate={new Date()}
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Type</label>
+                        <input
+                            type="text"
+                            name="type"
+                            value={searchFilters.type}
+                            onChange={handleFilterChange}
+                            placeholder="Filter by type"
+                            className="w-full p-2 border rounded-md"
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                        <input
+                            type="text"
+                            name="description"
+                            value={searchFilters.description}
+                            onChange={handleFilterChange}
+                            placeholder="Filter by description"
+                            className="w-full p-2 border rounded-md"
+                        />
+                    </div>
+                </div>
+                <div className="mt-4 flex justify-end space-x-2">
+                    <button
+                        onClick={resetFilters}
+                        className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
+                    >
+                        Reset Filters
+                    </button>
+                </div>
+            </div>
+
             {/* Transactions Table */}
             <div className="mt-4">
                 <h3 className="text-lg font-bold">Transaction History</h3>
+                <p className="text-sm text-gray-600 mb-2">
+                    Showing {filteredTransactions.length} of {transactions.length} transactions
+                </p>
                 <table className="table-auto w-full border mt-2">
                     <thead>
                         <tr className="bg-gray-200">
@@ -284,7 +473,7 @@ const AddTransaction = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {transactions.map((txn) => (
+                        {filteredTransactions.map((txn) => (
                             <tr key={txn._id} className="border">
                                 <td className="border p-2">{txn.type}</td>
                                 <td className="border p-2">LKR {txn.amount}</td>
