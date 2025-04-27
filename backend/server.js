@@ -22,9 +22,7 @@ import profitLossRoutes from './routes/Finance/profitLossRoutes.js'; //Esandi
 import pettyCashRoutes from './routes/Finance/pettyCashRoutes.js'; //Esandi
 import paymentRoutes from './routes/Finance/paymentRoutes.js'; //Esandi
 import bankAccountRoutes from './routes/Finance/bankAccountRoutes.js'; //Esandi
-
-
-//import pdfRoutes from "./routes/pdfRoutes.js";
+import pdfRoutes from "./routes/Finance/pdfRoutes.js";
 
 
 
@@ -130,7 +128,7 @@ app.use('/api/pettycash', pettyCashRoutes);//Esandi
 app.use("/api/finance", financeRoutes); //Esandi
 app.use("/api", financeRoutes);;//Esandi
 app.use('/api/profit-loss', profitLossRoutes);//Esandi
-//app.use("/api/pdf", pdfRoutes);
+app.use("/api/pdf", pdfRoutes);
 
 
 app.listen(5000,()=>{
