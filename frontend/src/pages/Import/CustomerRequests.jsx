@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../../api/axios.js';
 
 const CustomerRequests = () => {
     const [requests, setRequests] = useState([]);
@@ -8,7 +8,7 @@ const CustomerRequests = () => {
     useEffect(() => {
         const fetchRequests = async () => {
             try {
-                const response = await axios.get('/api/customer-requests');
+                const response = await api.get('/api/customer-requests');
                 setRequests(Array.isArray(response.data) ? response.data : []);
             } catch (error) {
                 console.error('Error fetching requests:', error);

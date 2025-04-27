@@ -1,20 +1,32 @@
 import express from 'express';
-import CustomerRequest from '../models/CustomerRequest.js';
+import CustomerRequest from '../../models/Import/CustomerRequest.js';
 
 const router = express.Router();
 
 router.post('/', async (req, res) => {
     try {
-        const { name, email, phoneNumber, bank, vehicle } = req.body;
-        if (!name || !email || !phoneNumber || !bank || !vehicle) {
-            return res.status(400).json({ message: 'Missing required fields' });
+        const { name, email, phoneNumber, bank, vehicleType, preferredBrand, budget } = req.body;
+        
+        // Check required fields
+        if (!name || !email || !phoneNumber || !bank || !vehicleType || !preferredBrand || !budget) {
+            return res.status(400).json({ 
+                message: 'Missing required fields',
+                required: ['name', 'email', 'phoneNumber', 'bank', 'vehicleType', 'preferredBrand', 'budget'],
+                received: req.body
+            });
         }
 
         const customerRequest = new CustomerRequest(req.body);
         const savedRequest = await customerRequest.save();
         res.status(201).json(savedRequest);
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        res.status(400).json({ 
+            message: error.message,
+            details: error.errors ? Object.keys(error.errors).map(key => ({
+                field: key,
+                message: error.errors[key].message
+            })) : undefined
+        });
     }
 });
 
