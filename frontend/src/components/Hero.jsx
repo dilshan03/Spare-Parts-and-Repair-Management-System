@@ -31,7 +31,7 @@ const Hero = () => {
       description: 'Get your dream car imported with our hassle-free service'
     },
     {
-      image: image3, 
+      image: image1, 
       title: 'Quality Spare Parts',
       description: 'Genuine spare parts for all major vehicle brands'
     },
