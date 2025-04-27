@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../../api/axios.js';
+import { BACKEND_URL } from '../../config.js';
 
-export default function AdminPanel() {
+export default function AdminPanelImport() {
   const [models, setModels] = useState([]);
   const [formData, setFormData] = useState({
     name: '',
@@ -20,23 +21,19 @@ export default function AdminPanel() {
   useEffect(() => {
     fetchVehicles();
   }, []);
-
+  
+  const token = localStorage.getItem("token");
   const fetchVehicles = async () => {
     try {
       setIsLoading(true);
-      const token = localStorage.getItem("token");
-      const response = await axios.get(
-        '/api/vehicles',
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      setVehicles(response.data);
+      
+      const response = await api.get('/api/vehicles');
+      // Ensure response.data is an array, if not set to empty array
+      setVehicles(Array.isArray(response.data) ? response.data : []);
     } catch (err) {
       console.error('Error fetching vehicles:', err);
       setError('Failed to fetch vehicles');
+      setVehicles([]); // Reset to empty array on error
     } finally {
       setIsLoading(false);
     }
@@ -91,26 +88,24 @@ export default function AdminPanel() {
       let response;
       if (editingId) {
         // Update existing vehicle
-        response = await axios.put(
+        response = await api.put(
           `/api/vehicles/${editingId}`,
           formDataToSend,
           {
             headers: {
-              'Content-Type': 'multipart/form-data',
-              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'multipart/form-data'
             },
           }
         );
         alert('Vehicle updated successfully!');
       } else {
         // Create new vehicle
-        response = await axios.post(
+        response = await api.post(
           '/api/vehicles',
           formDataToSend,
           {
             headers: {
-              'Content-Type': 'multipart/form-data',
-              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'multipart/form-data'
             },
           }
         );
@@ -124,7 +119,9 @@ export default function AdminPanel() {
       fetchVehicles();
     } catch (error) {
       console.error('Error saving vehicle:', error);
-      alert(error.response?.data?.error || 'Error saving vehicle. Please try again.');
+      const errorMessage = error.response?.data?.error || error.message || 'Error saving vehicle. Please try again.';
+      console.log('Full error response:', error.response?.data); // Add this for debugging
+      alert(errorMessage);
     }
   };
   
@@ -143,14 +140,7 @@ export default function AdminPanel() {
     try {
       if (window.confirm('Are you sure you want to delete this vehicle?')) {
         const token = localStorage.getItem("token");
-        await axios.delete(
-          `/api/vehicles/${id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        await api.delete(`/api/vehicles/${id}`);
         fetchVehicles();
         alert('Vehicle deleted successfully!');
       }
@@ -239,9 +229,13 @@ export default function AdminPanel() {
           <div key={vehicle._id} className="border rounded p-4 flex justify-between items-start">
             <div>
               <img
-                src={vehicle.imageUrl}
+                src={`${BACKEND_URL}${vehicle.imageUrl}`}
                 alt={vehicle.name}
                 className="w-32 h-32 object-cover mb-2 rounded"
+                onError={(e) => {
+                  console.error('Image load error:', e);
+                  e.target.src = 'https://via.placeholder.com/128x128?text=No+Image';
+                }}
               />
               <p><strong>{vehicle.brand} {vehicle.name}</strong> ({vehicle.year})</p>
               <p>LKR{vehicle.price.toLocaleString()}</p>

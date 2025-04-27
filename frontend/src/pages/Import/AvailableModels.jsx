@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../../api/axios.js';
+import { BACKEND_URL } from '../../config.js';
 import CustomerRequestForm from '../../components/Import/CustomerRequestForm.jsx';
 
 export default function AvailableModels() {
@@ -7,9 +8,8 @@ export default function AvailableModels() {
   const [selectedVehicle, setSelectedVehicle] = useState(null);
 
   useEffect(() => {
-    axios
-      .get('/api/vehicles')
-      .then(res => setModels(res.data))
+    api.get('/api/vehicles')
+      .then(res => setModels(Array.isArray(res.data) ? res.data : []))
       .catch(err => console.error(err));
   }, []);
 
@@ -23,9 +23,13 @@ export default function AvailableModels() {
             className="bg-white rounded-2xl shadow-md overflow-hidden"
           >
             <img
-              src={model.imageUrl}
+              src={`${BACKEND_URL}${model.imageUrl}`}
               alt={model.name}
               className="w-full h-48 object-cover"
+              onError={(e) => {
+                console.error('Image load error:', e);
+                e.target.src = 'https://via.placeholder.com/300x200?text=No+Image';
+              }}
             />
             <div className="p-4">
               <h2 className="text-xl font-semibold">

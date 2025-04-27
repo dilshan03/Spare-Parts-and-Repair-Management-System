@@ -16,6 +16,9 @@ import RepairDashBoard from './pages/Repair/RepairDashBoard.jsx'
 import QuotationDashBoard from './pages/Quotation/QuotationDashBoard.jsx'
 import ServiceDashboard from './pages/Service/ServiceDashboard.jsx'
 import ImportDashboard from './pages/Import/ImportDashboard.jsx'
+import AdminPanel1 from "./pages/Import/AdminPanelImport.jsx";
+import CustomerRequests from "./pages/Import/CustomerRequests.jsx";
+import AvailableModels from "./pages/Import/AvailableModels.jsx";
 
 import FinanceDashboard from './components/Finance/FinanceDashboard.jsx'
 
@@ -52,9 +55,31 @@ function App() {
         <Route path="/RepairadminDash/*" element={<RepairDashBoard />} />
         <Route path="/QuotationDash/*" element={<QuotationDashBoard />} />
         <Route path="/ServiceDash/*" element={<ServiceDashboard />} />
-        <Route path="/appointments/" element={<AppointmentForm />} />
-        <Route path="/import/" element={<ImportDashboard />} /> 
+        <Route path="/appointments/" element={<AppointmentForm />} /> 
         <Route path="/repairRequestFrom" element={<RepairRequestFrom />} />
+
+        <Route path="/import" element={<ImportDashboard />}>
+        <Route
+          index
+          element={
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Admin Panel Section */}
+              <div className="bg-white rounded-lg shadow-lg p-6 overflow-auto">
+                <h2 className="text-2xl font-bold mb-4">Admin Panel</h2>
+                <AdminPanel1 />
+              </div>
+
+              {/* Customer Requests Section */}
+              <div className="bg-white rounded-lg shadow-lg p-6 overflow-auto">
+                <h2 className="text-2xl font-bold mb-4">Customer Requests</h2>
+                <CustomerRequests />
+              </div>
+            </div>
+          }
+        />
+        <Route path="vehicles" element={<AvailableModels />} />
+        <Route path="requests" element={<CustomerRequests />} />
+      </Route>
 
       </Routes>
       <Footer />

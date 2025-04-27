@@ -133,7 +133,7 @@ const Sidebar = () => {
         </Link>
 
         <Link 
-          to="/importdash/" 
+          to="/import" 
           style={linkStyle}
           onMouseOver={(e) => e.currentTarget.style.backgroundColor = "#4b5563"}
           onMouseOut={(e) => e.currentTarget.style.backgroundColor = "transparent"}

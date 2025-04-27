@@ -15,6 +15,7 @@ import jobCardRoutes from "./routes/Repair/JobCardRoutes.js";//RY
 
 import quotationRoutes from "./routes/Quotation/quotationRoutes.js";//Dilshan
 import appointmentRoutes from "./routes/Service/appointment.js";//Dilshan
+import vehicleRoutes from "./routes/Import/vehicle.routes.js";//Vehicle Import
 
 import financeRoutes from "./routes/Finance/finance.js"; //Esandi
 import balanceSheetRoutes from './routes/Finance/balanceSheetRoutes.js';//Esandi
@@ -33,6 +34,9 @@ import cors from "cors";
 dotenv.config();
 
 const app = express();
+
+// Serve static files from uploads directory
+app.use('/uploads', express.static('uploads'));
 
 // Configure CORS
 const corsOptions = {
@@ -120,6 +124,7 @@ app.use("/api/jobCards", jobCardRoutes); //RY
 
 app.use("/api/quotations", quotationRoutes); //Dilshan
 app.use("/api/appointments", appointmentRoutes); //Dilshan
+app.use("/api/vehicles", vehicleRoutes); //Vehicle Import
 
 
 app.use('/api/payments', paymentRoutes);//Esandi
