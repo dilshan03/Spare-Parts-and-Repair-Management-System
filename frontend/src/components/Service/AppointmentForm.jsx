@@ -27,6 +27,14 @@ const AppointmentForm = () => {
     return true;
   };
 
+
+  const validateVehicleNumber = (value) => {
+    const vehicleNumberRegex = /^(?:[A-Z]{1,3}-\d{1,5}|[A-Z]{1,2} SRI \d{1,5})$/;
+    return vehicleNumberRegex.test(value);
+  };
+  
+  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateDate(form.date)) return;
@@ -45,6 +53,15 @@ const AppointmentForm = () => {
     } finally {
       setIsSubmitting(false);
     }
+
+    if (!validateVehicleNumber(form.vehicleNumber)) {
+      setError(
+        "Invalid vehicle number. Use formats like XX-1234, XXX-1234, X SRI 1234, or XX SRI 1234."
+      );
+      return;
+    }
+    
+
   };
 
   return (
@@ -106,8 +123,18 @@ const AppointmentForm = () => {
                   id="vehicleNumber"
                   name="vehicleNumber"
                   type="text"
-                  placeholder="ABC 1234"
+                  placeholder="XX-1234 or XX SRI 1234"
                   value={form.vehicleNumber}
+                  onBlur={(e) => {
+                    if (e.target.value && !validateVehicleNumber(e.target.value)) {
+                      setError(
+                        "Invalid vehicle number. Use formats like XX-1234, XXX-1234, X SRI 1234, or XX SRI 1234."
+                      );
+                    } else {
+                      setError("");
+                    }
+                  }}
+                  
                   onChange={handleChange}
                   className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
                   required
