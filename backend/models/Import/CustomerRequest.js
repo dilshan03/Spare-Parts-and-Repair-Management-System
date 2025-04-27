@@ -9,10 +9,24 @@ const customerRequestSchema = new mongoose.Schema({
         required: true,
         enum: ['HNB', 'Sampath Bank', 'Commercial Bank', 'Peoples Bank']
     },
+    vehicleType: {
+        type: String,
+        required: true,
+        enum: ['Car', 'SUV', 'Van', 'Truck']
+    },
+    preferredBrand: {
+        type: String,
+        required: true,
+        enum: ['Toyota', 'Honda', 'Nissan', 'BMW', 'Mercedes-Benz', 'Audi']
+    },
+    budget: {
+        type: Number,
+        required: true
+    },
     vehicle: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'VehicleModel', // <-- Correct reference name
-        required: true
+        ref: 'VehicleModel',
+        required: false 
     },
     requestDate: {
         type: Date,
