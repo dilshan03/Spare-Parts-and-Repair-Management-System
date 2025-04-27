@@ -28,7 +28,7 @@ const Hero = () => {
     {
       image: carImage,
       title: 'Welcome to Cosmo Exports',
-      description: 'Get your dream car imported with our hassle-free service'
+      description: 'Your trusted partner in vehicle imports, repairs, and spare parts'
     },
     {
       image: image1, 
