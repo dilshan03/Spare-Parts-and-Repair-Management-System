@@ -6,6 +6,15 @@ import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import { useNavigate } from 'react-router-dom';
 
 const CreateQuotation = () => {
+  const navigate = useNavigate();
+  const token = localStorage.getItem('token'); // 🔥 get token from localStorage
+
+  // 🔥 Get today's date in yyyy-mm-dd format
+  const getTodayDateString = () => {
+    const today = new Date();
+    return today.toISOString().split('T')[0];
+  };
+
   const [formData, setFormData] = useState({
     customerName: '',
     customerEmail: '',
@@ -14,13 +23,10 @@ const CreateQuotation = () => {
     repairs: [{ repairType: '', price: 0 }],
     discount: 0,
     totalAmount: 0,
-    quotationDate: '',
+    quotationDate: getTodayDateString(), // 🔥 default to today
   });
 
   const [quotationId, setQuotationId] = useState(null);
-  const navigate = useNavigate();
-
-  const token = localStorage.getItem('token'); // 🔥 get token from localStorage
 
   // Validate vehicle number format
   const validateVehicleNumber = (value) => {
@@ -86,7 +92,7 @@ const CreateQuotation = () => {
     setFormData({ ...formData, repairs: updatedRepairs });
   };
 
-  // Submit form
+  // 🔥 Submit form with Today's Date Validation
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!token) {
@@ -94,6 +100,18 @@ const CreateQuotation = () => {
       navigate('/login');
       return;
     }
+
+    // Validate: quotationDate must be today's date
+    const today = new Date();
+    const enteredDate = new Date(formData.quotationDate);
+    today.setHours(0, 0, 0, 0);
+    enteredDate.setHours(0, 0, 0, 0);
+
+    if (enteredDate.getTime() !== today.getTime()) {
+      alert('Quotation date must be today\'s date.');
+      return;
+    }
+
     try {
       const response = await axios.post('http://localhost:5000/api/quotations', formData, {
         headers: {
@@ -131,7 +149,7 @@ const CreateQuotation = () => {
         repairs: [{ repairType: '', price: 0 }],
         discount: 0,
         totalAmount: 0,
-        quotationDate: '',
+        quotationDate: getTodayDateString(),
       });
       setQuotationId(null);
     } catch (err) {
@@ -185,7 +203,7 @@ const CreateQuotation = () => {
           />
         </Grid>
 
-        {/* Quotation Date */}
+        {/* Quotation Date (auto-filled + disabled) */}
         <Grid item xs={12}>
           <TextField
             label="Quotation Date"
@@ -196,6 +214,7 @@ const CreateQuotation = () => {
             fullWidth
             required
             InputLabelProps={{ shrink: true }}
+            disabled // 🔥 Prevent user from changing it
           />
         </Grid>
 

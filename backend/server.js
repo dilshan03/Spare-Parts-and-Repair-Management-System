@@ -13,7 +13,8 @@ import RepairRequestFromRoute from "./routes/Repair/RepairRequestFromRoute.js";/
 import RepairRoute from "./routes/Repair/RepairRoutes.js"; //RY
 import jobCardRoutes from "./routes/Repair/JobCardRoutes.js";//RY
 
-import quotationRoutes from "./routes/Quotation/quotationRoutes.js";//RY
+import quotationRoutes from "./routes/Quotation/quotationRoutes.js";//Dilshan
+import appointmentRoutes from "./routes/Service/appointment.js";//Dilshan
 
 import financeRoutes from "./routes/Finance/finance.js"; //Esandi
 import balanceSheetRoutes from './routes/Finance/balanceSheetRoutes.js';//Esandi
@@ -59,7 +60,8 @@ app.use((req,res,next)=>{
         "/api/employees/login",
         "/api/employees/request-otp",
         "/api/employees/verify-otp",
-        "/api/employees/reset-password"
+        "/api/employees/reset-password",
+        "/api/appointments"
     ];
     
     // Check if the request URL matches any public route
@@ -117,6 +119,7 @@ app.use("/api/repairs", RepairRoute); //RY
 app.use("/api/jobCards", jobCardRoutes); //RY
 
 app.use("/api/quotations", quotationRoutes); //Dilshan
+app.use("/api/appointments", appointmentRoutes); //Dilshan
 
 
 app.use('/api/payments', paymentRoutes);//Esandi

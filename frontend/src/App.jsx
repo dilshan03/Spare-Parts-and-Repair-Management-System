@@ -14,6 +14,7 @@ import UpdatePassword from './pages/HR/UpdatePassword'
 import RepairDashBoard from './pages/Repair/RepairDashBoard.jsx'
 import QuotationDashBoard from './pages/Quotation/QuotationDashBoard.jsx'
 import ServiceDashboard from './pages/Service/ServiceDashboard.jsx'
+import ImportDashboard from './pages/Import/ImportDashboard.jsx'
 
 import FinanceDashboard from './components/Finance/FinanceDashboard.jsx'
 
@@ -51,6 +52,7 @@ function App() {
         <Route path="/QuotationDash/*" element={<QuotationDashBoard />} />
         <Route path="/ServiceDash/*" element={<ServiceDashboard />} />
         <Route path="/appointments/" element={<AppointmentForm />} />
+        <Route path="/import/" element={<ImportDashboard />} />
 
       </Routes>
       <Footer />

@@ -16,7 +16,7 @@ const Sidebar = () => {
         </Link>
 
         <Link to="/QuotationDash/" className="block px-4 py-2 rounded-lg hover:bg-gray-700 transition">
-          Quotation History
+          Quotation Dashboard
         </Link>
 
         <Link to="/RepairadminDash/" className="block px-4 py-2 rounded-lg hover:bg-gray-700 transition">
@@ -24,11 +24,15 @@ const Sidebar = () => {
         </Link>
 
         <Link to="/ServiceDash" className="block px-4 py-2 rounded-lg hover:bg-gray-700 transition">
-          Service Appointments
+          Service Appointments Dashboard
         </Link>
         
         <Link to="/inventory-dashboard" className="block px-4 py-2 rounded-lg hover:bg-gray-700 transition">
-          Inventory Management
+          Inventory Dashboard
+        </Link>
+
+         <Link to="/import" className="block px-4 py-2 rounded-lg hover:bg-gray-700 transition">
+          Vehicle Import Dashboard
         </Link>
       </nav>
     </div>
