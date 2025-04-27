@@ -92,7 +92,7 @@ export default function EmployeeProfile() {
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-lightblue-300">
-      <div className="bg-blue-700 text-white p-6 rounded-lg shadow-lg w-[800px] border border-gray-900">
+      <div className="bg-#111827 text-white p-6 rounded-lg shadow-lg w-[800px] border border-gray-900">
         <h1 className="text-4xl font-bold text-center mb-4 uppercase">Employee Profile</h1>
 
         <div className="grid grid-cols-2 gap-4">
