@@ -23,6 +23,7 @@ function DashBoard() {
             <Route path="/" element={<CreateQuotation/>} />
             <Route path="/quotations" element={<QuotationList/>} />
             <Route path="/quotations/:id" element={<QuotationDetails/>} />
+            
         </Routes>
           {/* ***************************************************************** */}
          

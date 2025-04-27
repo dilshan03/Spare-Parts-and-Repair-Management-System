@@ -53,7 +53,7 @@ function App() {
         <Route path="/QuotationDash/*" element={<QuotationDashBoard />} />
         <Route path="/ServiceDash/*" element={<ServiceDashboard />} />
         <Route path="/appointments/" element={<AppointmentForm />} />
-        <Route path="/import/" element={<ImportDashboard />} />
+        <Route path="/import/" element={<ImportDashboard />} /> 
         <Route path="/repairRequestFrom" element={<RepairRequestFrom />} />
 
       </Routes>

@@ -13,7 +13,7 @@ const App = () => {
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(5);
+  const [itemsPerPage] = useState(10);
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedRepair, setSelectedRepair] = useState(null);
   const [editStatus, setEditStatus] = useState("");

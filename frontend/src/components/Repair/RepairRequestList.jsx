@@ -18,6 +18,358 @@ const RepairRequestList = () => {
   const [requestsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
 
+// Function to generate PDF report
+const generatePDF = () => {
+  try {
+    // Use all repair requests for PDF
+    const requestsToShow = repairRequests || [];
+    console.log('Generating PDF with data:', requestsToShow);
+    
+    const doc = new jsPDF();
+    const pageWidth = doc.internal.pageSize.width;
+    const pageHeight = doc.internal.pageSize.height;
+    const margin = 15; // Reduced margin for more space
+    let startY = margin; // Current Y position
+    
+    // Add company header
+    doc.setFontSize(18); // Slightly smaller header
+    doc.setFont('helvetica', 'bold');
+    doc.text('Cosmo Exports Lanka (PVT) LTD', pageWidth / 2, startY, { align: 'center' });
+    startY += 8;
+    
+    doc.setFontSize(10); // Smaller contact info
+    doc.setFont('helvetica', 'normal');
+    doc.text('496/1, Naduhena, Meegoda, Sri Lanka', pageWidth / 2, startY, { align: 'center' });
+    startY += 5;
+    doc.text('Phone: +94 77 086 4011  +94 11 275 2373', pageWidth / 2, startY, { align: 'center' });
+    startY += 5;
+    doc.text('Email: cosmoexportslanka@gmail.com', pageWidth / 2, startY, { align: 'center' });
+    startY += 12;
+    
+    // Add report title
+    doc.setFontSize(14); // Smaller title
+    doc.setFont('helvetica', 'bold');
+    doc.text('Repair Requests Report', pageWidth / 2, startY, { align: 'center' });
+    startY += 5;
+    
+    doc.setLineWidth(0.3); // Thinner line
+    doc.line(margin, startY, pageWidth - margin, startY);
+    startY += 8;
+    
+    // Table configuration - reduced column widths
+    const headers = ['#', 'Customer', 'Vehicle', 'Repair', 'Status'];
+    const colWidths = [8, 50, 50, 50, 12]; // Narrower columns, especially status
+    const rowHeight = 7; // Smaller base row height
+    const cellPadding = 2;
+    const headerHeight = 8;
+    
+    // Draw table header with reduced height
+    doc.setFillColor(245, 245, 245);
+    doc.rect(margin, startY, pageWidth - 2 * margin, headerHeight, 'F');
+    
+    doc.setFontSize(10); // Smaller header font
+    doc.setFont('helvetica', 'bold');
+    doc.setDrawColor(128, 128, 128);
+    doc.setLineWidth(0.1); // Thinner borders
+    
+    // Draw header borders and text
+    let currentX = margin;
+    headers.forEach((header, i) => {
+      // Make status header text smaller
+      const fontSize = i === headers.length - 1 ? 8 : 10;
+      doc.setFontSize(fontSize);
+      
+      doc.rect(currentX, startY, colWidths[i], headerHeight);
+      doc.text(header, currentX + cellPadding, startY + cellPadding * 2);
+      currentX += colWidths[i];
+    });
+    
+    startY += headerHeight;
+    
+    // Table content
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9); // Smaller content font
+    
+    requestsToShow.forEach((request, index) => {
+      // Check if we need a new page (with higher threshold)
+      if (startY > pageHeight - 40) {
+        doc.addPage();
+        startY = margin;
+        // Redraw header if needed
+      }
+      
+      // Prepare content with shorter labels
+      const customerDetails = [
+        `${request.customerNameR || '-'}`,
+        `Tel: ${request.contactNumberR || '-'}`,
+        `Email: ${request.emailR || '-'}`
+        // Removed address to save space
+      ];
+      
+      const vehicleDetails = [
+        `${request.vehicleRegiNumberR || '-'}`,
+        `${request.vehicleMakeR || '-'} ${request.vehicleModelR || ''}`,
+        `Year: ${request.yearOfManufactureR || '-'}`,
+        `Mileage: ${request.mileageR || '-'}`
+        // Removed VIN to save space
+      ];
+      
+      const repairDetails = [
+        `${request.descripIssueR?.substring(0, 40) || '-'}...`,
+        `Date: ${request.prefDateAndTimeR || '-'}`,
+        `Urgency: ${request.urgencyLevelR || '-'}`
+        // Removed payment method to save space
+      ];
+      
+      const status = request.repairStatusR || '-';
+      
+      // Calculate max lines needed (reduced to 3 max)
+      const maxLines = Math.min(
+        Math.max(
+          customerDetails.length,
+          vehicleDetails.length,
+          repairDetails.length,
+          1
+        ),
+        3 // Limit to 3 lines max
+      );
+      
+      const currentRowHeight = rowHeight * maxLines;
+      
+      // Draw row borders
+      let currentX = margin;
+      headers.forEach((_, i) => {
+        doc.rect(currentX, startY, colWidths[i], currentRowHeight);
+        currentX += colWidths[i];
+      });
+      
+      // Add cell content
+      currentX = margin;
+      
+      // Index cell
+      doc.text(String(index + 1), currentX + cellPadding, startY + cellPadding * 2);
+      currentX += colWidths[0];
+      
+      // Customer details cell
+      customerDetails.slice(0, maxLines).forEach((line, i) => {
+        doc.text(line, currentX + cellPadding, startY + cellPadding * 2 + (i * rowHeight));
+      });
+      currentX += colWidths[1];
+      
+      // Vehicle details cell
+      vehicleDetails.slice(0, maxLines).forEach((line, i) => {
+        doc.text(line, currentX + cellPadding, startY + cellPadding * 2 + (i * rowHeight));
+      });
+      currentX += colWidths[2];
+      
+      // Repair details cell
+      repairDetails.slice(0, maxLines).forEach((line, i) => {
+        doc.text(line, currentX + cellPadding, startY + cellPadding * 2 + (i * rowHeight));
+      });
+      currentX += colWidths[3];
+      
+      // Status cell - smaller font and centered
+      doc.setFontSize(8);
+      doc.text(status, currentX + colWidths[4]/2, startY + currentRowHeight/2, { align: 'center' });
+      doc.setFontSize(9); // Reset font size
+      
+      startY += currentRowHeight;
+    });
+    
+    // Add compact footer
+    const pageCount = doc.internal.getNumberOfPages();
+    const footerText = `Generated: ${new Date().toLocaleDateString()}`;
+    
+    for (let i = 1; i <= pageCount; i++) {
+      doc.setPage(i);
+      doc.setFontSize(8); // Smaller footer
+      doc.text(
+        `Page ${i}/${pageCount} | ${footerText}`,
+        pageWidth / 2,
+        pageHeight - 7,
+        { align: 'center' }
+      );
+    }
+    
+    // Save the PDF
+    doc.save('repair_requests_report.pdf');
+    toast.success('PDF report generated successfully!');
+    
+  } catch (error) {
+    console.error('Error generating PDF:', error);
+    toast.error('Failed to generate PDF report');
+  }
+};
+  // // Function to generate PDF report
+  // const generatePDF = () => {
+  //   // Use all repair requests for PDF
+  //   const requestsToShow = repairRequests || [];
+  //   console.log('Generating PDF with data:', requestsToShow);
+  //   const doc = new jsPDF();
+  //   const pageWidth = doc.internal.pageSize.width;
+    
+  //   // Add company header
+  //   doc.setFontSize(20);
+  //   doc.text('Cosmo Exports Lanka (PVT) LTD', pageWidth / 2, 20, { align: 'center' });
+    
+  //   doc.setFontSize(12);
+  //   doc.text('496/1, Naduhena, Meegoda, Sri Lanka', pageWidth / 2, 30, { align: 'center' });
+  //   doc.text('Phone: +94 77 086 4011  +94 11 275 2373', pageWidth / 2, 35, { align: 'center' });
+  //   doc.text('Email: cosmoexportslanka@gmail.com', pageWidth / 2, 40, { align: 'center' });
+    
+  //   // Add report title
+  //   doc.setFontSize(16);
+  //   doc.text('Repair Requests Report', pageWidth / 2, 55, { align: 'center' });
+  //   doc.setLineWidth(0.5);
+  //   doc.line(20, 58, pageWidth - 20, 58);
+    
+  //   // Table headers exactly as shown in table
+  //   const headers = ['#', 'Customer Details', 'Vehicle Details', 'Repair Details', 'Status'];
+  //   let startY = 70;
+  //   const rowHeight = 50; // Increased for multiple lines
+  //   const colWidths = [15, 60, 60, 60, 15]; // Match table column widths
+  //   const cellPadding = 3; // Padding inside cells
+  //   let currentX = 20; // Starting X position
+    
+  //   // Draw table borders
+  //   doc.setDrawColor(128, 128, 128); // Gray border color
+  //   doc.setLineWidth(0.5);
+    
+  //   // Draw outer table border
+  //   doc.rect(20, startY - 8, pageWidth - 40, doc.internal.pageSize.height - startY - 20);
+    
+  //   // Draw header background
+  //   doc.setFillColor(245, 245, 245); // Light gray background
+  //   doc.rect(20, startY - 8, pageWidth - 40, 15, 'F');
+    
+  //   doc.setFontSize(12);
+  //   doc.setFont('helvetica', 'bold');
+    
+  //   // Draw vertical lines for columns
+  //   doc.setLineWidth(0.2);
+  //   currentX = 20;
+  //   headers.forEach((_, i) => {
+  //     doc.line(currentX, startY - 8, currentX, doc.internal.pageSize.height - 30);
+  //     currentX += colWidths[i];
+  //   });
+  //   doc.line(currentX, startY - 8, currentX, doc.internal.pageSize.height - 30);
+    
+  //   // Draw headers with proper spacing
+  //   currentX = 20;
+  //   headers.forEach((header, i) => {
+  //     doc.text(header, currentX + cellPadding, startY);
+  //     currentX += colWidths[i];
+  //   });
+    
+  //   // Draw header line
+  //   doc.setLineWidth(0.2);
+  //   doc.line(20, startY + 4, pageWidth - 20, startY + 4);
+    
+  //   // Table content
+  //   doc.setFont('helvetica', 'normal');
+  //   requestsToShow.forEach((request, index) => {
+  //     console.log('Processing request:', request);
+  //     startY += rowHeight;
+      
+  //     // Add new page if content exceeds page height
+  //     if (startY > 280) {
+  //       doc.addPage();
+  //       startY = 20;
+  //     }
+      
+  //     // Format customer details exactly as shown in table
+  //     const customerDetails = [
+  //       `Name: ${request.customerNameR || '-'}`,
+  //       `Contact: ${request.contactNumberR || '-'}`,
+  //       `Email: ${request.emailR || '-'}`,
+  //       `Address: ${request.addressR || '-'}`
+  //     ].join('\n');
+
+  //     // Format vehicle details exactly as shown in table
+  //     const vehicleDetails = [
+  //       `Reg. No: ${request.vehicleRegiNumberR || '-'}`,
+  //       `Make: ${request.vehicleMakeR || '-'}`,
+  //       `Model: ${request.vehicleModelR || '-'}`,
+  //       `Year: ${request.yearOfManufactureR || '-'}`,
+  //       `Mileage: ${request.mileageR || '-'}`,
+  //       `VIN: ${request.vehicleIdentiNumberR || '-'}`
+  //     ].join('\n');
+
+  //     // Format repair details exactly as shown in table
+  //     const repairDetails = [
+  //       `Description: ${request.descripIssueR || '-'}`,
+  //       `Preferred Date: ${request.prefDateAndTimeR || '-'}`,
+  //       `Urgency: ${request.urgencyLevelR || '-'}`,
+  //       `Payment: ${request.paymentMethodR || '-'}`
+  //     ].join('\n');
+
+  //     const status = request.repairStatusR || '-';
+      
+  //     // Draw horizontal line between rows
+  //     doc.setLineWidth(0.2);
+  //     doc.line(20, startY - 4, pageWidth - 20, startY - 4);
+      
+  //     // Reset X position for new row
+  //     currentX = 20;
+      
+  //     // Draw vertical lines for row
+  //     doc.setLineWidth(0.1);
+  //     headers.forEach((_, i) => {
+  //       doc.line(currentX, startY - 4, currentX, startY + rowHeight - 4);
+  //       currentX += colWidths[i];
+  //     });
+  //     doc.line(currentX, startY - 4, currentX, startY + rowHeight - 4);
+      
+  //     currentX = 20;
+  //     doc.setFontSize(9); // Smaller font for details
+      
+  //     // Draw each cell with proper width and padding
+  //     doc.text(String(index + 1), currentX + cellPadding, startY);
+      
+  //     // Customer details cell
+  //     doc.text(customerDetails, currentX + cellPadding, startY);
+  //     currentX += colWidths[1];
+      
+  //     // Vehicle details cell
+  //     doc.text(vehicleDetails, currentX + cellPadding, startY);
+  //     currentX += colWidths[2];
+      
+  //     // Repair details cell
+  //     doc.text(repairDetails, currentX + cellPadding, startY);
+  //     currentX += colWidths[3];
+      
+  //     // Status cell
+  //     doc.setFontSize(10);
+  //     doc.text(status, currentX + cellPadding, startY);
+      
+  //     // Draw row line
+  //     doc.setLineWidth(0.1);
+  //     doc.line(20, startY + 2, pageWidth - 20, startY + 2);
+  //   });
+    
+  //   // Add footer
+  //   const pageCount = doc.internal.getNumberOfPages();
+  //   for (let i = 1; i <= pageCount; i++) {
+  //     doc.setPage(i);
+  //     doc.setFontSize(10);
+  //     doc.text(
+  //       `Page ${i} of ${pageCount}`,
+  //       pageWidth / 2,
+  //       doc.internal.pageSize.height - 10,
+  //       { align: 'center' }
+  //     );
+  //     doc.text(
+  //       `Generated on ${new Date().toLocaleString()}`,
+  //       20,
+  //       doc.internal.pageSize.height - 10
+  //     );
+  //   }
+    
+  //   // Save the PDF
+  //   doc.save('repair_requests_report.pdf');
+  //   toast.success('PDF report generated successfully!');
+  // };
+
   useEffect(() => {
     const fetchRepairRequests = async () => {
       try {
@@ -92,6 +444,7 @@ const RepairRequestList = () => {
         confirmButtonText: "Yes, delete it!",
       }).then((result) => {
         if (result.isConfirmed) {
+          const token = localStorage.getItem("token");//RY
           axios
             .delete(`http://localhost:5000/api/repairRequest/${id}`, {
               headers: { Authorization: `Bearer ${token}` }
@@ -245,16 +598,28 @@ const RepairRequestList = () => {
         
       </div>
 
-
-      {/* Search Bar */}
-      <Form className="mb-4">
-        <FormControl
-          type="text"
-          placeholder="Search by Customer Name, Reg. No, or Service Type"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-      </Form>
+      <div className="d-flex justify-content-between align-items-center mb-3">
+        <div className="d-flex gap-2">
+          <Form className="d-flex" style={{ width: "250px" }}>
+            <FormControl
+              type="search"
+              placeholder="Search"
+              className="me-2"
+              aria-label="Search"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </Form>
+          <Button 
+            variant="success" 
+            onClick={generatePDF}
+            disabled={loading || repairRequests.length === 0}
+          >
+            <i className="fas fa-download me-2"></i>
+            Download PDF
+          </Button>
+        </div>
+      </div>
 
       {/* Table */}
       <div className="table-responsive" style={{ maxHeight: "1200px", overflowY: "auto", textAlign: "left" }}>
