@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import johnDoeImg from '../assets/john_doe.jpg';
 import janeSmithImg from '../assets/jane_smith.jpg';
 import mikeJohnsonImg from '../assets/mike_johnson.jpg';
@@ -67,12 +68,13 @@ const StaffPage = () => {
       </div>
 
       {/* Staff Login Button */}
-      <a
-        href="/login"
-        className="fixed right-6 bottom-6 bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-5 rounded-lg shadow-lg transition duration-300"
+      <Link
+        to="/login"
+        className="fixed right-6 bottom-6 bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-5 rounded-lg shadow-lg transition duration-300 no-underline hover:no-underline"
+        style={{ textDecoration: 'none' }}
       >
         Staff Login
-      </a>
+      </Link>
     </div>
   );
 };
