@@ -37,7 +37,12 @@ const AdminPage = () => {
     if (!window.confirm("Are you sure you want to delete this appointment?")) return;
     
     try {
-      await axios.delete(`http://localhost:5000/api/appointments/${id}`);
+
+      await axios.delete(`http://localhost:5000/api/appointments/${id}`,{
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
       const updatedList = appointments.filter(app => app._id !== id);
       setAppointments(updatedList);
       setFilteredAppointments(updatedList);
