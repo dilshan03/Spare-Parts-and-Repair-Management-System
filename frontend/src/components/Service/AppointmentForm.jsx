@@ -8,8 +8,9 @@ const AppointmentForm = () => {
 
   const timeSlots = ["09:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "01:00 PM", "02:00 PM", "03:00 PM", "04:00 PM"];
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+  const validateName = (value) => {
+    const nameRegex = /^[A-Za-z\s]+$/;
+    return nameRegex.test(value);
   };
 
   const validateDate = (selectedDate) => {
@@ -27,8 +28,49 @@ const AppointmentForm = () => {
     return true;
   };
 
+  const validateVehicleNumber = (value) => {
+    const vehicleNumberRegex = /^(?:[A-Z]{1,3}-\d{1,5}|[A-Z]{1,2} SRI \d{1,5})$/;
+    return vehicleNumberRegex.test(value);
+  };
+
+  const validatePhone = (value) => {
+    const phoneRegex = /^\d{10}$/;
+    return phoneRegex.test(value);
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    if (name === 'name' && value && !validateName(value)) {
+      setError('Full name should only contain letters and spaces');
+      return;
+    }
+    if (name === 'phone') {
+      if (!/^\d*$/.test(value)) {
+        setError('Phone number should only contain numbers');
+        return;
+      }
+      if (value.length > 10) {
+        setError('Phone number should not exceed 10 digits');
+        return;
+      }
+    }
+    setForm({ ...form, [name]: value });
+    setError('');
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    if (!validateName(form.name)) {
+      setError('Full name should only contain letters and spaces');
+      return;
+    }
+
+    if (!validatePhone(form.phone)) {
+      setError('Phone number must be exactly 10 digits');
+      return;
+    }
+    
     if (!validateDate(form.date)) return;
 
     setIsSubmitting(true);
@@ -45,10 +87,17 @@ const AppointmentForm = () => {
     } finally {
       setIsSubmitting(false);
     }
+
+    if (!validateVehicleNumber(form.vehicleNumber)) {
+      setError(
+        "Invalid vehicle number. Use formats like XX-1234, XXX-1234, X SRI 1234, or XX SRI 1234."
+      );
+      return;
+    }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-white py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl">
         <div className="p-8">
           <div className="text-center mb-8">
@@ -67,6 +116,13 @@ const AppointmentForm = () => {
                   placeholder="John Doe"
                   value={form.name}
                   onChange={handleChange}
+                  onBlur={(e) => {
+                    if (e.target.value && !validateName(e.target.value)) {
+                      setError('Full name should only contain letters and spaces');
+                    } else {
+                      setError('');
+                    }
+                  }}
                   className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
                   required
                 />
@@ -92,9 +148,16 @@ const AppointmentForm = () => {
                   id="phone"
                   name="phone"
                   type="tel"
-                  placeholder="(123) 456-7890"
+                  placeholder="Phone number"
                   value={form.phone}
                   onChange={handleChange}
+                  onBlur={(e) => {
+                    if (e.target.value && !validatePhone(e.target.value)) {
+                      setError('Phone number must be exactly 10 digits');
+                    } else {
+                      setError('');
+                    }
+                  }}
                   className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
                   required
                 />
@@ -106,8 +169,18 @@ const AppointmentForm = () => {
                   id="vehicleNumber"
                   name="vehicleNumber"
                   type="text"
-                  placeholder="ABC 1234"
+                  placeholder="XX-1234 or XX SRI 1234"
                   value={form.vehicleNumber}
+                  onBlur={(e) => {
+                    if (e.target.value && !validateVehicleNumber(e.target.value)) {
+                      setError(
+                        "Invalid vehicle number. Use formats like XX-1234, XXX-1234, X SRI 1234, or XX SRI 1234."
+                      );
+                    } else {
+                      setError("");
+                    }
+                  }}
+                  
                   onChange={handleChange}
                   className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
                   required

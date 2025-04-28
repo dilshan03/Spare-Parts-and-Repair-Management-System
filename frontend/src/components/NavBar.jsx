@@ -146,7 +146,7 @@ const Navbar = () => {
         </li>
         <li>
           <Link 
-            to="/import" 
+            to="/import/vehicles" 
             style={{
               color: "white",
               textDecoration: "none",
@@ -155,7 +155,7 @@ const Navbar = () => {
             onMouseOver={(e) => e.currentTarget.style.color = "#f97316"}
             onMouseOut={(e) => e.currentTarget.style.color = "white"}
           >
-            Import vehicle
+            Import Vehicle
           </Link>
         </li>
         <li>

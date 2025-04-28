@@ -1,5 +1,4 @@
-//for bank book management
-
+import fs from 'fs';
 import PDFDocument from "pdfkit";
 import BankBookTransaction from "../../models/Finance/BankBookTransaction.js";
 import BankAccount from "../../models/Finance/BankAccount.js";
@@ -8,162 +7,185 @@ export const generateBankStatementPDF = async (req, res) => {
   try {
     const { accountId } = req.params;
     
-    // Fetch account with error handling
     const account = await BankAccount.findById(accountId);
     if (!account) {
       throw new Error('Bank account not found');
     }
 
-    // Fetch all transactions for this account
     const transactions = await BankBookTransaction.find({ 
       bank_account_id: accountId 
-    }).sort({ createdAt: -1 }); // newest first
+    }).sort({ createdAt: -1 });
 
     console.log('Found transactions:', transactions.length);
 
-    const doc = new PDFDocument({ margin: 40 });
+    // PDF Document Setup
+    const doc = new PDFDocument({ 
+      margin: 40,
+      size: 'A4',
+      bufferPages: true,
+      info: {
+        Title: 'Bank Statement',
+        Author: 'Cosmo Exports Lanka (PVT) LTD',
+        Subject: 'Account Statement'
+      }
+    });
+    
     res.setHeader('Content-Disposition', 'attachment; filename="bank_statement.pdf"');
     res.setHeader('Content-Type', 'application/pdf');
     doc.pipe(res);
 
-    // BANK STATEMENT TITLE
-    doc.fontSize(20).text("Cosmo Exports Lanka (PVT) LTD", 50, 120, { align: "center" });
-    doc.fontSize(12).text("496/1, Naduhena, Meegoda, Sri Lanka", { align: "center" });
-    doc.text("Phone: +94 77 086 4011  +94 11 275 2373 | Email: cosmoexportslanka@gmail.com", { align: "center" });
-    doc.moveDown(2);
-    doc.fontSize(18).text("Bank Statement", { align: "center" });
-    doc.moveDown();
+    // Colors
+    const primaryColor = '#2c3e50';
+    const secondaryColor = '#3498db';
+    const lightGray = '#f5f5f5';
+    const darkGray = '#333333';
+    const white = '#ffffff';
 
-    // ACCOUNT HOLDER DETAILS
-    doc.fontSize(12).fillColor('black').text('ACCOUNT HOLDER DETAILS', { bold: true, background: 'grey' });
-    doc.moveDown(0.5);
+    // Header with Logo
+    doc.rect(0, 0, doc.page.width, 120).fill(primaryColor);
+    
+    const logoPath = "images/logo.jpg";
+    if (fs.existsSync(logoPath)) {
+      doc.image(logoPath, 50, 25, { width: 70 });
+    }
+
+    // Company Info
+    doc.fillColor(white)
+      .fontSize(18)
+      .text("Cosmo Exports Lanka (PVT) LTD", 0, 40, { align: "center" })
+      .fontSize(10)
+      .text("496/1, Naduhena, Meegoda, Sri Lanka", { align: "center" })
+      .text("Phone: +94 77 086 4011  +94 11 275 2373 | Email: cosmoexportslanka@gmail.com", { align: "center" })
+      .moveDown(0.5);
+
+    // Document Title
+    doc.fontSize(16)
+      .text("BANK STATEMENT", { align: "center", underline: false })
+      .moveDown(2);
+
+    // Reset to normal colors
+    doc.fillColor(darkGray).strokeColor(darkGray);
+
+    // Account Holder Details Section
+    doc.rect(40, 150, doc.page.width - 80, 20)
+      .fill(secondaryColor);
+    
+    doc.fillColor(white)
+      .fontSize(12)
+      .text('ACCOUNT HOLDER DETAILS', 50, 155)
+      .fillColor(darkGray);
+
     doc.fontSize(11)
-      .text(`Account Holder Name: John Doe`)
-      .text(`Registered Mobile Number: +94 77 086 4011`)
-      .text(`Residential Address: Sri Lanka`);
-    doc.moveDown(1);
+      .text(`Account Holder Name: John Doe`, 50, 180)
+      .text(`Registered Mobile Number: +94 77 086 4011`, 50, 195)
+      .text(`Residential Address: Sri Lanka`, 50, 210)
+      .moveDown(1.5);
 
-    // ACCOUNT DETAILS
-    doc.fontSize(12).fillColor('black').text('ACCOUNT DETAILS', { bold: true });
-    doc.moveDown(0.5);
+    // Account Details Section
+    doc.rect(40, 240, doc.page.width - 80, 20)
+      .fill(secondaryColor);
+    
+    doc.fillColor(white)
+      .fontSize(12)
+      .text('ACCOUNT DETAILS', 50, 245)
+      .fillColor(darkGray);
+
     doc.fontSize(11)
-      .text(`Account Type: Savings`)
-      .text(`Account Balance: ${account.balance}`)
-      .text(`Total Balance: ${account.balance}`)
-    doc.moveDown(1);
+      .text(`Account Type: Savings`, 50, 270)
+      .text(`Account Balance: ${account.balance.toFixed(2)} LKR`, 50, 285)
+      .text(`Total Balance: ${account.balance.toFixed(2)} LKR`, 50, 300)
+      .moveDown(1.5);
 
-    // ACCOUNT STATEMENT
-    doc.fontSize(12).fillColor('black').text('ACCOUNT STATEMENT');
-    doc.moveDown(0.5);
+    // Account Statement Section
+    doc.rect(40, 330, doc.page.width - 80, 20)
+      .fill(secondaryColor);
+    
+    doc.fillColor(white)
+      .fontSize(12)
+      .text('ACCOUNT STATEMENT', 50, 335)
+      .fillColor(darkGray)
+      .moveDown(2);
 
     // Table Header
-    doc.fontSize(10).fillColor('black');
-    const tableTop = doc.y;
-    const colWidths = [60, 60, 100, 60, 50, 50, 60];
-    const headers = ['Txn Date', 'Value Date', 'Description', 'Ref No/Cheque No', 'Debit', 'Credit', 'Balance'];
-    let x = doc.x;
-    headers.forEach((header, i) => {
-      doc.text(header, x, tableTop, { width: colWidths[i], align: 'left' });
-      x += colWidths[i];
-    });
-    doc.moveDown(0.5);
-    doc.moveTo(doc.x, doc.y).lineTo(doc.page.width - doc.page.margins.right, doc.y).stroke();
+    const tableTop = 370;
+    const rowHeight = 20;
+    const dateX = 50;
+    const typeX = 150;
+    const amountX = 320;
+    const balanceX = 450;
+
+    // Header background
+    doc.rect(40, tableTop - 10, doc.page.width - 80, rowHeight + 5)
+      .fill(lightGray);
+
+    doc.fontSize(11)
+      .fillColor(darkGray)
+      .text('Date', dateX, tableTop)
+      .text('Transaction Type', typeX, tableTop)
+      .text('Amount (LKR)', amountX, tableTop)
+      .text('Balance After', balanceX, tableTop);
 
     // Table Rows
-    let y = doc.y + 2;
-    let runningBalance = account.balance;
-    
-    // Sort transactions in reverse chronological order
+    let y = tableTop + 25;
+    let isEvenRow = false;
+
     const sortedTransactions = [...transactions].sort((a, b) => 
       new Date(b.createdAt) - new Date(a.createdAt)
     );
 
-    sortedTransactions.forEach(tx => {
-      // Debug log for transaction
-      console.log('Processing transaction:', {
-        id: tx._id,
-        type: tx.transaction_type,
-        amount: tx.amount,
-        balance: tx.current_balance
-      });
-
-      let debit = '', credit = '';
-      const formattedAmount = parseFloat(tx.amount).toFixed(2);
-      
-      // Explicitly handle each transaction type
-      switch(tx.transaction_type) {
-        case 'withdrawal':
-        case 'bank_charge':
-          debit = formattedAmount;
-          credit = '';
-          break;
-        case 'deposit':
-        case 'unknown_deposit':
-          debit = '';
-          credit = formattedAmount;
-          break;
-        default:
-          console.log('Unknown transaction type:', tx.transaction_type);
+    sortedTransactions.forEach((tx, index) => {
+      // Alternate row colors
+      if (isEvenRow) {
+        doc.rect(40, y - 10, doc.page.width - 80, rowHeight)
+          .fill(lightGray);
       }
-      
-      x = doc.x;
+      isEvenRow = !isEvenRow;
+
+      const formattedAmount = parseFloat(tx.amount).toFixed(2);
       const txnDate = tx.createdAt ? new Date(tx.createdAt) : null;
       const txnDateStr = txnDate && !isNaN(txnDate) ? 
         txnDate.toLocaleDateString('en-US', { 
           year: 'numeric', 
           month: '2-digit', 
           day: '2-digit' 
-        }) : '';
-      
-      // Transaction description based on type
-      const description = tx.description || 
-        (tx.transaction_type === 'deposit' ? 'Cash Deposit' :
-         tx.transaction_type === 'withdrawal' ? 'Cash Withdrawal' :
-         tx.transaction_type === 'bank_charge' ? 'Bank Charge' :
-         tx.transaction_type === 'unknown_deposit' ? 'Unknown Deposit' : '');
-      
-      // Write row data
-      doc.text(txnDateStr, x, y, { width: colWidths[0] });
-      x += colWidths[0];
-      doc.text(txnDateStr, x, y, { width: colWidths[1] });
-      x += colWidths[1];
-      doc.text(description, x, y, { width: colWidths[2] });
-      x += colWidths[2];
-      doc.text(tx._id.toString().slice(-6), x, y, { width: colWidths[3] }); // Use last 6 chars of transaction ID as reference
-      x += colWidths[3];
-      doc.text(debit, x, y, { width: colWidths[4], align: 'right' });
-      x += colWidths[4];
-      doc.text(credit, x, y, { width: colWidths[5], align: 'right' });
-      x += colWidths[5];
-      doc.text(parseFloat(tx.current_balance).toFixed(2), x, y, { width: colWidths[6], align: 'right' });
-      
-      // Add a line between transactions
-      y += 20;
-      if (y > doc.page.height - 100) {  // Check if we need a new page
+        }) : 'Unknown';
+
+      let transactionType = '';
+      switch (tx.transaction_type) {
+        case 'withdrawal':
+        case 'bank_charge':
+          transactionType = 'Withdrawal';
+          break;
+        case 'deposit':
+        case 'unknown_deposit':
+          transactionType = 'Deposit';
+          break;
+        default:
+          transactionType = 'Transaction';
+      }
+
+      doc.fontSize(10)
+        .fillColor(darkGray)
+        .text(txnDateStr, dateX, y)
+        .text(transactionType, typeX, y)
+        .text(formattedAmount, amountX, y, { width: 80, align: 'right' })
+        .text(parseFloat(tx.current_balance).toFixed(2), balanceX, y, { width: 80, align: 'right' });
+
+      y += rowHeight;
+
+      // Page break logic
+      if (y > doc.page.height - 100) {
         doc.addPage();
-        y = 50;  // Reset Y position on new page
+        y = 50;
+        isEvenRow = false; // Reset row coloring on new page
       }
     });
-    doc.moveDown(2);
 
-    // REWARD POINTS SUMMARY (placeholder)
-    doc.fontSize(12).fillColor('black').text('REWARD POINTS SUMMARY');
-    doc.moveDown(0.5);
-    doc.fontSize(11)
-      .text('Savings Account number: ' + (account.accountNumber || '__________'))
-      .text('Card Number: __________')
-      .text('Earnings: __________')
-      .text('Total Balance: ' + account.balance);
-    doc.moveDown(1);
-
-    // ACCOUNT RELATED OTHER INFO (placeholder)
-    doc.fontSize(12).fillColor('black').text('ACCOUNT RELATED OTHER INFO');
-    doc.moveDown(0.5);
-    doc.fontSize(11)
-      .text('Account Type: Savings')
-      .text('Account Number: ' + (account.accountNumber || '__________'))
-      .text('MICR: __________')
-      .text('IFSC: __________');
+    // Footer
+    doc.fontSize(10)
+      .fillColor(darkGray)
+      .text(`Generated on ${new Date().toLocaleDateString()}`, 50, doc.page.height - 50)
+      .text("Authorized Signature: ______________", doc.page.width - 200, doc.page.height - 50, { align: "right" });
 
     doc.end();
   } catch (err) {

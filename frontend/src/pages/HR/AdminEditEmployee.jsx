@@ -26,9 +26,24 @@ export default function AdminEditEmployee() {
   const validate = () => {
     let tempErrors = {};
     if (!/^EMP\d{4}$/.test(empId)) tempErrors.empId = "Employee ID must start with 'EMP' followed by 4 digits.";
+    // Birthday
+    if (!birthday) {
+      tempErrors.birthday = "Birthday is required.";
+    }
+  
     if (!/^\S+@\S+\.\S+$/.test(email)) tempErrors.email = "Invalid email format.";
     if (!(age >= 18 && age <= 65)) tempErrors.age = "Age must be between 18 and 65.";
     if (!/^\d{10}$/.test(phone)) tempErrors.phone = "Phone number must be exactly 10 digits.";
+     // Name Fields (Only letters and spaces)
+     const nameRegex = /^[A-Za-z\s]+$/;
+  
+     if (!firstName || !nameRegex.test(firstName)) {
+       tempErrors.firstName = "First name can only contain letters and spaces.";
+     }
+   
+     if (!lastName || !nameRegex.test(lastName)) {
+       tempErrors.lastName = "Last name can only contain letters and spaces.";
+     }
     setErrors(tempErrors);
     return Object.keys(tempErrors).length === 0;
   };
@@ -91,6 +106,7 @@ export default function AdminEditEmployee() {
   }
 
   return (
+    <div className="flex justify-center items-center min-h-screen bg-white">
     <div>
       <h1 className="text-3xl font-bold text-center text-gray-800 uppercase tracking-wide relative mb-6">Update Employee</h1>
   
@@ -192,6 +208,7 @@ export default function AdminEditEmployee() {
           Cancel
         </button>
       </div>
+    </div>
     </div>
   );
   

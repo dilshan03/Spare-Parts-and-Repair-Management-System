@@ -1,4 +1,8 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import johnDoeImg from '../assets/john_doe.jpg';
+import janeSmithImg from '../assets/jane_smith.jpg';
+import mikeJohnsonImg from '../assets/mike_johnson.jpg';
 
 const staffMembers = [
   {
@@ -7,7 +11,7 @@ const staffMembers = [
     experience: '15+ years in automotive management',
     specialty: 'Customer service & business operations',
     certification: 'Certified Automotive Service Manager',
-    photo: '/images/john_doe.jpg',
+    photo: johnDoeImg,
     department: 'Management',
   },
   {
@@ -16,7 +20,7 @@ const staffMembers = [
     experience: '10+ years in vehicle repair',
     specialty: 'Engine diagnostics & brake systems',
     certification: 'ASE Certified Technician',
-    photo: '/images/jane_smith.jpg',
+    photo: janeSmithImg,
     department: 'Mechanics',
   },
   {
@@ -25,7 +29,7 @@ const staffMembers = [
     experience: '5+ years in automotive sales',
     specialty: 'Spare parts & customer support',
     certification: 'Certified Auto Parts Specialist',
-    photo: '/images/mike_johnson.jpg',
+    photo: mikeJohnsonImg,
     department: 'Sales',
   },
 ];
@@ -64,12 +68,13 @@ const StaffPage = () => {
       </div>
 
       {/* Staff Login Button */}
-      <a
-        href="/login"
-        className="fixed right-6 bottom-6 bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-5 rounded-lg shadow-lg transition duration-300"
+      <Link
+        to="/login"
+        className="fixed right-6 bottom-6 bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-5 rounded-lg shadow-lg transition duration-300 no-underline hover:no-underline"
+        style={{ textDecoration: 'none' }}
       >
         Staff Login
-      </a>
+      </Link>
     </div>
   );
 };

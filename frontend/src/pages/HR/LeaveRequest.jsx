@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { useNavigate , useLocation } from "react-router-dom";
+
 
 export default function LeaveRequest() {
   const [leaveRequests, setLeaveRequests] = useState([]);
@@ -9,6 +10,10 @@ export default function LeaveRequest() {
   const [endDate, setEndDate] = useState("");
   const [reason, setReason] = useState("");
   const navigate = useNavigate();
+  const location = useLocation();
+  const employee = location.state;
+
+  
 
   // Fetch leave requests for logged-in user
   useEffect(() => {
@@ -120,9 +125,16 @@ export default function LeaveRequest() {
           />
           <button
             onClick={submitLeaveRequest}
-            className="w-full p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            className="w-full m-2 p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
           >
             Submit Leave Request
+          </button>
+
+          <button
+            onClick={() => navigate("/employeeProfile/" , { state: employee } )}
+            className="p-2 m-2 w-full bg-green-500 text-white rounded hover:bg-green-600"
+          >
+            Back to profile
           </button>
         </div>
       </div>

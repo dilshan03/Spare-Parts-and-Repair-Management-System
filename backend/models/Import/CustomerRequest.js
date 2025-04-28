@@ -11,8 +11,8 @@ const customerRequestSchema = new mongoose.Schema({
     },
     vehicle: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'VehicleModel', // <-- Correct reference name
-        required: true
+        ref: 'VehicleModel',
+        required: false 
     },
     requestDate: {
         type: Date,
