@@ -18,12 +18,12 @@ export default function AvailableModels() {
     <div className="p-6">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Available Vehicle Models</h1>
-        <button 
+        {/*<button 
           onClick={() => setShowRequestForm(true)}
           className="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors"
         >
           Request Vehicle Import
-        </button>
+        </button>*/}
       </div>
 
       {showRequestForm && (
