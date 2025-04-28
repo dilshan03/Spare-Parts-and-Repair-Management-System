@@ -34,6 +34,12 @@ const CreateQuotation = () => {
     return vehicleNumberRegex.test(value);
   };
 
+  // Validate customer name (only letters and spaces)
+  const validateCustomerName = (value) => {
+    const nameRegex = /^[A-Za-z\s]+$/;
+    return nameRegex.test(value);
+  };
+
   // Recalculate total amount whenever items, repairs, or discount change
   useEffect(() => {
     const itemsTotal = formData.items.reduce((sum, item) => sum + Number(item.quantity) * Number(item.price), 0);
@@ -52,6 +58,10 @@ const CreateQuotation = () => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     if (name === 'discount' && Number(value) < 0) return; // prevent negative discount
+    if (name === 'customerName' && value && !validateCustomerName(value)) {
+      alert('Please enter only letters and spaces for customer name');
+      return;
+    }
     setFormData({ ...formData, [name]: value });
   };
 
