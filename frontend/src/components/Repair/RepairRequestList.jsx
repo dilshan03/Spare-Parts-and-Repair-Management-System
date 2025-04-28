@@ -9,6 +9,7 @@ import Swal from "sweetalert2";//for alert delete
 import jsPDF from "jspdf";//dowunload pdf
 import html2canvas from "html2canvas";//dowunload pdf
 import "./RepairRequestList.css";
+import logo from "../../assets/logo.jpg";
 
 const RepairRequestList = () => {
   const [repairRequests, setRepairRequests] = useState([]);
@@ -30,11 +31,19 @@ const generatePDF = () => {
     const pageHeight = doc.internal.pageSize.height;
     const margin = 15; // Reduced margin for more space
     let startY = margin; // Current Y position
+
+    // Add logo
+    const img = new Image();
+    img.src = logo;
+    const logoWidth = 30; // Width of the logo in mm
+    const logoHeight = 30; // Height of the logo in mm
+    const logoX = margin; // Position from left margin
+    doc.addImage(img, 'JPEG', logoX, startY, logoWidth, logoHeight);
     
-    // Add company header
+    // Add company header (moved to the right of the logo)
     doc.setFontSize(18); // Slightly smaller header
     doc.setFont('helvetica', 'bold');
-    doc.text('Cosmo Exports Lanka (PVT) LTD', pageWidth / 2, startY, { align: 'center' });
+    doc.text('Cosmo Exports Lanka (PVT) LTD', logoX + logoWidth + 10, startY + 15, { align: 'left' });
     startY += 8;
     
     doc.setFontSize(10); // Smaller contact info
