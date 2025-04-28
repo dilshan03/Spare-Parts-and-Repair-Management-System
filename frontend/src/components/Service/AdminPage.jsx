@@ -82,7 +82,12 @@ const AdminPage = () => {
     try {
       const response = await axios.put(
         `http://localhost:5000/api/appointments/${id}`,
-        editData
+        editData,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        }
       );
       const updatedAppointments = appointments.map((app) =>
         app._id === id ? response.data : app
