@@ -45,7 +45,7 @@ function App() {
 
 
        <Route path="/admin/employees/*" element={<AdminPanel  />} />
-        <Route path="/employeeProfile" element={<EmployeeProfile />} />
+        <Route path="/employeeProfile/*" element={<EmployeeProfile />} />
         <Route path="/employeeProfile/leave" element={<LeaveRequest/>} />
         <Route path="/api/reset-password" element={< UpdatePassword/>} />
         <Route path="/finance-dashboard" element={<FinanceDashboard/>} /> 

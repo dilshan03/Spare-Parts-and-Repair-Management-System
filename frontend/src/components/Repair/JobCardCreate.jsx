@@ -44,12 +44,33 @@ const JobCardCreate = () => {
   }, []);
 
   // Handle job input change
+  // const handleJobChange = (index, field, value) => {
+  //   const updatedJobs = [...jobs];
+  //   updatedJobs[index][field] = value;
+  //   setJobs(updatedJobs);
+  // };
+
   const handleJobChange = (index, field, value) => {
     const updatedJobs = [...jobs];
+  
+    // Validate job cost to ensure it's a positive integer
+    if (field === "jobCost") {
+      const costValue = value.trim();
+  
+      if (!/^\d+$/.test(costValue) || parseInt(costValue) <= 0) {
+        toast.error("Job cost must be a positive integer", {
+          position: "top-right",
+          autoClose: 3000,
+        });
+        return; // Don't update the value if validation fails
+      }
+    }
+  
     updatedJobs[index][field] = value;
     setJobs(updatedJobs);
   };
 
+  
   // Add a new job
   const addJob = () => {
     setJobs([...jobs, { jobName: "", jobDescription: "", jobStatus: "Pending", jobCost: 0 }]);

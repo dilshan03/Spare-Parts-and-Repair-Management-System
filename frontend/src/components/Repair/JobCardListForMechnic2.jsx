@@ -45,7 +45,7 @@ const JobCardList = () => {
         new Date(jobCard.createdAt) <= new Date(filters.endDate)
       );
     }
-    
+    // // 
     // if (filters.mechanic) {
     //   filtered = filtered.filter(jobCard => 
     //     jobCard.assignedMechanic.toLowerCase().includes(filters.mechanic.toLowerCase())
@@ -95,7 +95,7 @@ const JobCardList = () => {
 
   // Navigate to job card details
   const handleViewDetails = (jobCardId) => {
-    navigate(`/RepairadminDash/jobCards/mechnic/${jobCardId}`);
+    navigate(`mechnic/${jobCardId}`);
   };
 
   // Find the corresponding repair request for a job card
@@ -172,7 +172,7 @@ const JobCardList = () => {
               <th>Assigned Mechanic</th>
               <th>Jobs</th>
               <th>Created At</th>
-              <th>Actions</th>
+              <th>Vehicle</th>
             </tr>
           </thead>
           <tbody>
@@ -214,13 +214,16 @@ const JobCardList = () => {
                   </td>
                   <td>{new Date(jobCard.createdAt).toLocaleString()}</td>
                   <td>
-                    <Button
+                    {/* <Button
                       variant="info"
                       size="sm"
                       onClick={() => handleViewDetails(jobCard._id)}
                     >
                       View Details
-                    </Button>
+                    </Button> */}
+                    
+                     {jobCard.repairId?.requestFormId?.vehicleMakeR || "N/A"} {jobCard.repairId?.requestFormId?.vehicleModelR || "N/A"}<br></br>
+                     {jobCard.repairId?.requestFormId?.vehicleIdentiNumberR || "N/A"}
                   </td>
                 </tr>
               );

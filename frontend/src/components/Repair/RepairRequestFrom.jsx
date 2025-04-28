@@ -6,6 +6,7 @@ import { ErrorMessage } from "@hookform/error-message";
 import "./RepairRequestForm.css";
 import { ToastContainer, toast } from "react-toastify";//for notifycation
 import "react-toastify/dist/ReactToastify.css";//for notifycation
+ 
 
 function RepairRequestForm() {
   const [currentStep, setCurrentStep] = useState(1); // Track the current step
@@ -65,71 +66,7 @@ function RepairRequestForm() {
     }
   };
 
-  // // Handle Form Submission
-  // const onSubmit = (data) => {
-  //   const formData = new FormData();
-  //   for (const key in data) {
-  //     if (key === "vehiclePhotoR") {
-  //       formData.append(key, data[key][0]); // Handle file upload
-  //     } else {
-  //       formData.append(key, data[key]);
-  //     }
-  //   }
-
-  //   axios
-  //     .post("http://localhost:5000/repairRequest/", formData, {
-  //       headers: {
-  //         "Content-Type": "multipart/form-data",
-  //       },
-  //     })
-  //     .then((result) => {
-  //       console.log(result);
-  //       navigate("/");
-  //       alert("Successfully submitted!");
-  //     })
-  //     .catch((err) => console.log(err));
-  // };
-
-    // // Handle Form Submission
-    // const onSubmit = (data) => {
-    //   const token = localStorage.getItem("token");//RY
-    //   const formData = new FormData();
-    //   for (const key in data) {
-    //     if (key === "vehiclePhotoR") {
-    //       formData.append(key, data[key][0]); // Handle file upload
-    //     } else {
-    //       formData.append(key, data[key]);
-    //     }
-    //   }
   
-    //   axios
-    //     .post("http://localhost:5000/repairRequest/", {//RT
-    //       headers: { Authorization: `Bearer ${token}`
-    //     "Content-Type": "multipart/form-data", }
-    //     })//RYformData, {
-    //       headers: {
-    //         "Content-Type": "multipart/form-data",
-    //       },
-    //     })
-    //     .then((result) => {
-    //       console.log(result);
-    //       navigate("/RepairReqFrom");
-    //       // Show success notification
-    //       toast.success("Repair request submitted successfully!", {
-    //         position: toast.POSITION.TOP_RIGHT,
-    //         autoClose: 3000,
-    //       });
-    //     })
-    //     .catch((err) => {
-    //       console.error(err);
-    //       // Show error notification
-    //       toast.error("Failed to submit repair request!", {
-    //         position: toast.POSITION.TOP_RIGHT,
-    //         autoClose: 3000,
-    //       });
-    //     });
-    // };
-
     const onSubmit = (data) => {
       const token = localStorage.getItem("token");
       const formData = new FormData();
@@ -151,21 +88,66 @@ function RepairRequestForm() {
         })
         .then((result) => {
           console.log(result);
-          navigate("/RepairReqFrom");
           toast.success("Repair request submitted successfully!", {
-            position: toast.POSITION.TOP_RIGHT,
+            position: "top-right",
             autoClose: 3000,
           });
+          // Reset form after toast displays
+          setTimeout(() => {
+            window.location.reload();
+          }, 3000); // Wait for toast to display before reload
         })
         .catch((err) => {
           console.error(err);
           toast.error("Failed to submit repair request!", {
-            position: toast.POSITION.TOP_RIGHT,
+            position: "top-right",
             autoClose: 3000,
           });
         });
     };
     
+    // In your JSX, place ONE ToastContainer at the root level (right before closing the main container div):
+    <ToastContainer />
+
+
+    // const onSubmit = (data) => {
+    //   const token = localStorage.getItem("token");
+    //   const formData = new FormData();
+    
+    //   for (const key in data) {
+    //     if (key === "vehiclePhotoR") {
+    //       formData.append(key, data[key][0]); // File
+    //     } else {
+    //       formData.append(key, data[key]);
+    //     }
+    //   }
+    
+    //   axios
+    //     .post("http://localhost:5000/api/repairRequest/", formData, {
+    //       headers: {
+    //         Authorization: `Bearer ${token}`,
+    //         "Content-Type": "multipart/form-data",
+    //       },
+    //     })
+    //     .then((result) => {
+    //       console.log(result);
+    //       toast.success("Repair request submitted successfully!", {
+    //         position: "top-right", // ✅ Fixed here
+    //         autoClose: 3000,
+    //       });
+    //       // Reset the form after success
+    //       window.location.reload(); // ✅ Refresh the page
+    //     })
+    //     .catch((err) => {
+    //       console.error(err);
+    //       toast.error("Failed to submit repair request!", {
+    //         position: "top-right", // ✅ Fixed here
+    //         autoClose: 3000,
+    //       });
+    //     });
+    // };
+    
+ 
     
   return (
     <div className="container">
@@ -655,7 +637,7 @@ function RepairRequestForm() {
                       <label htmlFor="vehicleIdentiNumberR" style={{ textAlign: "left" }}>
                         Vehicle Identification Number (VIN)
                       </label>
-                      <input
+                      {/* <input
                         type="text"
                         className="form-control"
                         id="vehicleIdentiNumberR"
@@ -669,7 +651,21 @@ function RepairRequestForm() {
                             message: "VIN must be exactly 7 numbers", // Error message for invalid input
                           },
                         })}
+                      /> */}
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="vehicleIdentiNumberR"
+                        placeholder="Enter Vehicle Number"
+                        {...register("vehicleIdentiNumberR", {
+                          required: "Your Vehicle Number is required",
+                          pattern: {
+                            value: /^([A-Z]{2,3}-\d{4}|[A-Z]{2,3}\d{4})$/,
+                            message: "Invalid Vehicle Number format (e.g., CA-1234 or WPX1234)",
+                          },
+                        })}
                       />
+
                       <ErrorMessage
                         errors={errors}
                         name="vehicleIdentiNumberR"
@@ -795,13 +791,28 @@ function RepairRequestForm() {
                         })}
                       >
                         <option value="">Select a service type</option>
-                        <option value="Vehicle Repair">Vehicle Repair</option>
+                        {/* <option value="Vehicle Repair">Vehicle Repair</option>
                         <option value="Vehicle Restoration">Vehicle Restoration</option>
                         <option value="General Service">General Service</option>
                         <option value="Oil Change">Oil Change</option>
                         <option value="Tire Replacement">Tire Replacement</option>
                         <option value="Battery Replacement">Battery Replacement</option>
+                        <option value="Brake Inspection">Brake Inspection</option> */}
+                        <option value="Vehicle Repair">Vehicle Repair</option>
+                        <option value="Vehicle Restoration">Vehicle Restoration</option>
+                        <option value="General Service">General Service</option> 
+                        <option value="Tire Replacement">Tire Replacement</option>
+                        <option value="Battery Replacement">Battery Replacement</option>
                         <option value="Brake Inspection">Brake Inspection</option>
+                        <option value="Paint Repair">Paint Repair</option>
+                        <option value="Dent Repair">Dent Repair</option>
+                        <option value="Windshield Repair">Windshield Repair</option>
+                        <option value="Rust Repair">Rust Repair</option>
+                        <option value="AC Repair">AC Repair</option>
+                        <option value="Electrical Repair">Electrical Repair</option>
+                        <option value="Interior Repair">Interior Repair</option>
+                        <option value="Bodywork Repair">Bodywork Repair</option>
+
                       </select>
 
                       <ErrorMessage

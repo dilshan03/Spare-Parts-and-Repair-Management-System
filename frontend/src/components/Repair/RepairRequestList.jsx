@@ -507,11 +507,11 @@ const generatePDF = () => {
 </h1>
 
      {/* Download PDF Button */}
-     <div className="text-end mb-3">
+     {/* <div className="text-end mb-3">
         <Button variant="success" onClick={downloadPDF}>
           <i className="bi bi-download"></i> Download PDF
         </Button>
-      </div>
+      </div> */}
 
       <div className="addd-end mb-3">
         <Link to={`/RepairadminDash/RepairReqFrom`} className="btn btn-primary btn-sm ms-2" style={{backgroundColor:"rgb(16, 33, 161)"}}>
@@ -534,7 +534,7 @@ const generatePDF = () => {
                 margin:"10px"
               }}>
                 <p><strong>Total Repair Requests:</strong>
-                <br></br> {repairRequests.length}</p>
+                  {repairRequests.length}</p>
             </div>
              
             <div  style={{
@@ -603,13 +603,14 @@ const generatePDF = () => {
           <Form className="d-flex" style={{ width: "250px" }}>
             <FormControl
               type="search"
-              placeholder="Search"
+              placeholder="Search Name / Repair Type"
               className="me-2"
               aria-label="Search"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </Form>
+          
           <Button 
             variant="success" 
             onClick={generatePDF}

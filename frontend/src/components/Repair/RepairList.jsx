@@ -334,7 +334,7 @@ const RepairList = ({
                   </td>
                   <td style={{ minWidth: '320px' }}>
                     <div className="d-flex gap-2">
-                      <Button variant="success" size="sm" onClick={() => handleSendEmail(repair._id)}>Email</Button>
+                      {/* <Button variant="success" size="sm" onClick={() => handleSendEmail(repair._id)}>Email</Button> */}
                       <Button variant="info" size="sm" onClick={() => handleViewClick(repair)}>View</Button>
                       <Button variant="warning" size="sm" onClick={() => handleEditRepair(repair)}>Edit</Button>
                       <Button variant="primary" size="sm" onClick={() => handleOpen(repair._id)}>Add Jobs</Button>
