@@ -187,7 +187,7 @@ function RepairRequestForm() {
             {currentStep === 1 && (
               <div className="step">
                 <h2>Customer Details</h2>
-                <div className="form-group">
+                {/* <div className="form-group">
                   <label htmlFor="customerNameR" style={{ textAlign: "left" }}>
                     Customer Name
                   </label>
@@ -205,11 +205,37 @@ function RepairRequestForm() {
                       <p className="error-message" style={{ textAlign: "left" }}>{message}</p>
                     )}
                   />
+                </div> */}
+                <div className="form-group">
+                  <label htmlFor="customerNameR" style={{ textAlign: "left" }}>
+                    Customer Name
+                  </label>
+                  <input 
+                    type="text"
+                    className="form-control"
+                    id="customerNameR"
+                    placeholder="Enter your full name"
+                    {...register("customerNameR", { 
+                      required: "Customer Name is required",
+                      pattern: {
+                        value: /^[A-Za-z\s]+$/, // Only letters and spaces allowed
+                        message: "Only letters are allowed in the name"
+                      }
+                    })}
+                  />
+                  <ErrorMessage
+                    errors={errors}
+                    name="customerNameR"
+                    render={({ message }) => (
+                      <p className="error-message" style={{ textAlign: "left", color: "red" }}>{message}</p>
+                    )}
+                  />
                 </div>
+
 
                 <div className="row">
                   <div className="col-md-6">
-                    <div className="form-group">
+                    {/* <div className="form-group">
                       <label htmlFor="contactNumberR" style={{ textAlign: "left" }}>
                         Contact Number
                       </label>
@@ -227,7 +253,41 @@ function RepairRequestForm() {
                           <p className="error-message" style={{ textAlign: "left" }}>{message}</p>
                         )}
                       />
-                    </div>
+                    </div> */}
+                    <div className="form-group">
+                    <label htmlFor="contactNumberR" style={{ textAlign: "left" }}>
+                      Contact Number
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="contactNumberR"
+                      placeholder="Enter contact number"
+                      {...register("contactNumberR", { 
+                        required: "Contact Number is required",
+                        pattern: {
+                          value: /^[0-9]+$/,  // Only numbers allowed
+                          message: "Only numbers are allowed"
+                        },
+                        minLength: {
+                          value: 10,           // Minimum 10 digits
+                          message: "Contact Number must be at least 10 digits"
+                        },
+                        maxLength: {
+                          value: 15,           // Maximum 15 digits
+                          message: "Contact Number must not exceed 15 digits"
+                        }
+                      })}
+                    />
+                    <ErrorMessage
+                      errors={errors}
+                      name="contactNumberR"
+                      render={({ message }) => (
+                        <p className="error-message" style={{ textAlign: "left", color: "red" }}>{message}</p>
+                      )}
+                    />
+                  </div>
+
                   </div>
                   <div className="col-md-6">
                     <div className="form-group">
@@ -296,7 +356,7 @@ function RepairRequestForm() {
                   <div className="col-md-6">
                     <div className="form-group">
                       <label htmlFor="vehicleRegiNumberR" style={{ textAlign: "left" }}>
-                        Vehicle Registration Number
+                      Vehicle Identification Number (VIN)
                       </label>
                       <input
                         type="text"
@@ -635,7 +695,7 @@ function RepairRequestForm() {
                   <div className="col-md-6">
                     <div className="form-group">
                       <label htmlFor="vehicleIdentiNumberR" style={{ textAlign: "left" }}>
-                        Vehicle Identification Number (VIN)
+                      License Plate Number 
                       </label>
                       {/* <input
                         type="text"
