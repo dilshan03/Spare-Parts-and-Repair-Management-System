@@ -44,7 +44,7 @@ const generatePDF = () => {
     doc.setFontSize(18); // Slightly smaller header
     doc.setFont('helvetica', 'bold');
     doc.text('Cosmo Exports Lanka (PVT) LTD', logoX + logoWidth + 10, startY + 15, { align: 'left' });
-    startY += 8;
+    startY += 20; // Increased spacing after company name
     
     doc.setFontSize(10); // Smaller contact info
     doc.setFont('helvetica', 'normal');
