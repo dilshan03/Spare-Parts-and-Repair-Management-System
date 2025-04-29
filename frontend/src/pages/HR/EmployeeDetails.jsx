@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+import logo from '../../assets/logo.jpg'; 
 
 export default function EmployeeDetails() {
   const [employees, setEmployees] = useState([]);
@@ -47,6 +50,106 @@ export default function EmployeeDetails() {
       toast.error("Failed to delete employee");
     }
   };
+
+  const downloadPDF = () => {
+    const doc = new jsPDF({ orientation: "landscape" });
+
+    const img = new Image();
+    img.src = logo;
+  
+    img.onload = function () {
+      // Add company logo
+      doc.addImage(img, 'JPEG', 15, 10, 30, 30); // Use 'JPEG' or 'PNG'
+  
+      // Company info
+      doc.setFontSize(16);
+      doc.text("Cosmo Exports Lanka (PVT) LTD", 60, 20);
+      doc.setFontSize(10);
+      doc.text("496/1, Naduhena, Meegoda, Sri Lanka", 60, 27);
+      doc.text("Phone: +94 77 086 4011  |  +94 11 275 2373", 60, 33);
+      doc.text("Email: cosmoexportslanka@gmail.com", 60, 39);
+  
+      // Title
+      doc.setFontSize(14);
+      doc.text("Employee Details Report", 14, 55);
+      doc.setFontSize(12);
+  
+      // Table headers and rows
+      const headers = [["Employee ID", "Name", "Email", "Birthday", "Age", "Salary", "Address", "Phone", "Role", "Type", "Status"]];
+
+      const formatDate = (date) =>
+      new Date(date).toLocaleDateString("en-GB"); // dd/mm/yyyy
+
+      const data = employees.map(emp => [
+        emp.id,
+        `${emp.firstName} ${emp.lastName}`,
+        emp.email,
+        formatDate(emp.birthday),
+        emp.age,
+        `LKR ${emp.salary.toLocaleString()}`,
+        emp.address,
+        emp.phone,
+        emp.role,
+        emp.employeeType,
+        emp.status,
+      ]);
+  
+      autoTable(doc, {
+        head: [[
+          "Employee ID", "Name", "Email", "Birthday", "Age",
+          "Salary", "Address", "Phone", "Role", "Type", "Status"
+        ]],
+        body: data,
+        startY: 65,
+        theme: "striped",
+        styles: {
+          fontSize: 9,
+          cellPadding: 3,
+          overflow: 'linebreak' // allows long content to wrap
+        },
+        headStyles: {
+          fillColor: [44, 62, 80],
+          textColor: 255,
+          halign: 'center',
+          valign: 'middle',
+          fontStyle: 'bold'
+        },
+        columnStyles: {
+          0: { cellWidth: 22 }, // Employee ID
+          1: { cellWidth: 28 }, // Name
+          2: { cellWidth: 40 }, // Email
+          3: { cellWidth: 28 }, // Birthday
+          4: { cellWidth: 12 }, // Age
+          5: { cellWidth: 22 }, // Salary
+          6: { cellWidth: 50 }, // Address (increased)
+          7: { cellWidth: 25 }, // Phone
+          8: { cellWidth: 20 }, // Role
+          9: { cellWidth: 20 }, // Type
+          10: { cellWidth: 25 }  // Status
+        },
+        margin: { top: 60 },
+        didDrawPage: function (data) {
+          doc.setFontSize(14);
+          
+        },
+        pageBreak: 'auto'
+      });
+      
+      
+  
+      // Footer
+      doc.text("Authorized Signature:", 150, doc.internal.pageSize.height - 30);
+      doc.line(150, doc.internal.pageSize.height - 28, 200, doc.internal.pageSize.height - 28);
+  
+      // Save
+      doc.save("Employee_Details_Report.pdf");
+    };
+  
+    img.onerror = function () {
+      toast.error("Logo image failed to load. PDF not generated.");
+    };
+  };
+  
   
 
   return (
@@ -122,6 +225,13 @@ export default function EmployeeDetails() {
                   >
                     Add Employee
                   </button>
+
+                  <button
+              className="bg-red-500 text-white px-4 py-1 rounded"
+              onClick={downloadPDF}
+            >
+              Download PDF
+            </button>
     </div>
   );
 }
