@@ -1,6 +1,6 @@
 //productController.js
 
-import SparePart from "../../Inventory/models/Product.js";
+import SparePart from "../../models/Inventory/Product.js";
 import nodemailer from 'nodemailer';
 import path from 'path';
 import { fileURLToPath } from 'url';
