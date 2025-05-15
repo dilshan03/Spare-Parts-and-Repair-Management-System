@@ -1,0 +1,70 @@
+/* .repair-request-list {
+    padding: 20px;
+  }
+  
+  .repair-request-list ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .repair-request-list li {
+    border: 1px solid #ccc;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+  }
+  
+  .repair-request-list h2 {
+    margin-top: 0;
+  }
+  
+  .repair-request-list img {
+    margin-top: 10px;
+  } */
+
+.sl{
+  background-color: rgb(0, 13, 109);
+}
+/* General button styling */
+.btn {
+  padding: 0.375rem 0.75rem; /* Consistent padding */
+  font-size: 0.875rem; /* Smaller font size */
+  border-radius: 0.25rem; /* Rounded corners */
+  transition: all 0.3s ease; /* Smooth transition for hover effects */
+  display: inline-flex; /* Align icons and text */
+  align-items: center; /* Center icons and text vertically */
+  gap: 0.5rem; /* Space between icon and text */
+}
+
+/* Update Button Styling */
+.btn-success {
+  background-color: #28a745; /* Bootstrap green */
+  border-color: #28a745;
+}
+
+.btn-success:hover {
+  background-color: #218838; /* Darker green on hover */
+  border-color: #1e7e34;
+}
+
+/* Delete Button Styling */
+.btn-dark {
+  background-color: #343a40; /* Bootstrap dark */
+  border-color: #343a40;
+}
+
+.btn-dark:hover {
+  background-color: #23272b; /* Darker shade on hover */
+  border-color: #1d2124;
+}
+
+/* Icon Styling */
+.bi {
+  font-size: 1rem; /* Icon size */
+}
+
+/* Hover Effects */
+.btn:hover {
+  transform: translateY(-1px); /* Slight lift on hover */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow on hover */
+}
