@@ -17,8 +17,8 @@ const upload = multer({ storage });
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: "esandidesilva20@gmail.com",
-    pass: "wjke klmm gjwe jgbd",
+    user: "youemail@gmail.com",
+    pass: "yourpassword",
   },
 });
 
@@ -120,7 +120,7 @@ router.get("/", async (req, res) => {
 // Function to send email notifications
 const sendEmail = (to, subject, text) => {
   const mailOptions = {
-    from: "esandidesilva20@gmail.com",
+    from: "youremail@gmail.com",
     to,
     subject,
     text,
